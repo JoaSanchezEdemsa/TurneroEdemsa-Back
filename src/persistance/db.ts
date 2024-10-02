@@ -1,7 +1,7 @@
 import { DataSource } from "typeorm"
 import { Turn } from "./turno"
-// import Motivo from "./motivo"
-// import Sucursal from "./sucursal"
+import { Motive } from "./motivo"
+import { Subsidiary } from "./sucursal"
 // import Usuario from "./usuario"
 import "reflect-metadata"
 import "dotenv/config"
@@ -17,7 +17,7 @@ export const AppDataSource = new DataSource({
     database: process.env.DATABASE_NAME,
     synchronize: true,
     logging: true,
-    entities: [Turn],
+    entities: [Turn, Motive, Subsidiary],
     subscribers: [],
     migrations: []
 })
@@ -30,7 +30,20 @@ export type Turno ={
     fecha: Date
 }
 
-export const pdb:Array <Turno> = [
+export type Motivo ={
+    id: number,
+    motivo: string,
+    tiempo_estimado: string
+}
+
+export type Sucursal ={
+    id: number,
+    numero_sucursal: number,
+    nombre_sucursal: string
+}
+
+
+export const tdb:Array <Turno> = [
     {
         id: 1,
         nombre: 'Alfonso',
@@ -39,3 +52,20 @@ export const pdb:Array <Turno> = [
         fecha: new Date()
     },
 ]
+
+export const mdb:Array <Motivo> = [
+    {
+        id: 1,
+        motivo: 'Reclamo',
+        tiempo_estimado: '5 minutos'
+    }, 
+]
+
+export const sdb:Array <Sucursal> = [
+    {
+        id: 1,
+        numero_sucursal: 1301,
+        nombre_sucursal: 'Las Heras'
+    },
+]
+    

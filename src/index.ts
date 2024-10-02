@@ -4,7 +4,8 @@ import  {Turn}  from './persistance/turno';
 import { mainRouter } from './router/routes' ;
 import cors from 'cors';
 import {config} from 'dotenv';
-
+import { Motive } from './persistance/motivo';
+import { Subsidiary } from './persistance/sucursal';
 const app = express();
 
 config();
@@ -44,7 +45,6 @@ app.get('/', (_,res) => {
     console.log("hola");
     res.send("hola");
 });
-
 
 AppDataSource.initialize()
     .then(async() => {
