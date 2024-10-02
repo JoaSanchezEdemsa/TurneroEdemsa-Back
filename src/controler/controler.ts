@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { AppDataSource, tdb, mdb, sdb } from "../persistance/db";
+import { AppDataSource, tdb } from '../persistance/db';
 import { Turn }  from '../persistance/turno';
 import { Motive }  from '../persistance/motivo';
 import { Subsidiary }  from '../persistance/sucursal';

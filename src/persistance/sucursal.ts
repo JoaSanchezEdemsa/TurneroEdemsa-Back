@@ -5,9 +5,7 @@ export class Subsidiary {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column({
-    length: 1000,
-  })
+  @Column()
   numero_sucursal!: number;
 
   @Column()

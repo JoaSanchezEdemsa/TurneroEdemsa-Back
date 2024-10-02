@@ -53,7 +53,9 @@ AppDataSource.initialize()
         const turnos_exist = await validation_turno.find();
         if (turnos_exist.length == 0){
             const turno = new Turn('Alfonso', 'Magallanes', 47332098, new Date());
-            AppDataSource.manager.save([turno])
+            const motivo = new Motive('Reclamo', '5 minutos');
+            const sucursal = new Subsidiary(1301, 'Las Heras');            
+            AppDataSource.manager.save([turno, motivo, sucursal])
             console.log(turnos_exist)
         }
         app.listen(port, () => {
