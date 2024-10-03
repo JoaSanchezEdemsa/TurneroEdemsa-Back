@@ -55,6 +55,7 @@ AppDataSource.initialize()
         const turnos_exist = await validation_turno.find();
         if (turnos_exist.length == 0){
             const turno = new Turn('Alfonso', 'Magallanes', 47332098, "3/10/2024");         
+            console.log("---------------------------------AGREGADO--------------------------------------------")
             AppDataSource.manager.save(turno)
             console.log(turnos_exist)
         }

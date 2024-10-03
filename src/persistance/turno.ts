@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, EntityManager } from "typeorm";
 
 @Entity()
 export class Turn {
@@ -22,6 +22,15 @@ export class Turn {
     this.apellido = apellido;
     this.dni = dni;
     this.fecha = fecha;
+}
+
+static async agregarTurno(nombre: string, apellido: string, dni: number, fecha: string, entityManager: EntityManager):Promise <void> {
+    const newTurno = new Turn(nombre, apellido, dni, fecha);
+    newTurno.nombre = nombre;
+    newTurno.apellido = apellido;
+    newTurno.dni = dni;
+    newTurno.fecha = fecha;
+    await entityManager.save(newTurno);
 }
 }
 

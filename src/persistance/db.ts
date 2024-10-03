@@ -43,17 +43,17 @@ export type Sucursal ={
 }
 
 
-export const tdb:Array <Turno> = [
-    {
-        id: 1,
-        nombre: 'Alfonso',
-        apellido: 'Magallanes',
-        dni: 47332098,        
-        fecha: "3/10/2024"
-    },
-]
+// export const tdb:Array <Turno> = [
+//     {
+//         id: 1,
+//         nombre: 'Alfonso',
+//         apellido: 'Magallanes',
+//         dni: 47332098,        
+//         fecha: "3/10/2024"
+//     },
+// ]
 
-export const mdb:Array <Motivo> = [
+ export const mdb:Array <Motivo> = [
     {
         id: 1,
         motivo: 'Reclamo',

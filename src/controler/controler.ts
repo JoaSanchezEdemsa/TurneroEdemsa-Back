@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { AppDataSource, tdb, mdb, sdb } from '../persistance/db';
+import { AppDataSource} from '../persistance/db';
 import { Turn }  from '../persistance/turno';
 import { Motive }  from '../persistance/motivo';
 import { Subsidiary }  from '../persistance/sucursal';
@@ -19,24 +19,30 @@ export const getSucursal = async (_: Request, res: Response) => {
     res.json(sucursal);
 }
 
-export const addTurnoToDB = async () => {
-    tdb.map(async (p: Turn) => {
-        const newTurno = new Turn(p.nombre, p.apellido, p.dni, p.fecha);
-        await AppDataSource.manager.save(newTurno);
-    });
+export const addTurnoToDB = async (req: Request, res: Response) => {
+    const { nombre, apellido, dni, fecha } = req.body;
+
+    try {
+        
+        await Turn.agregarTurno(nombre, apellido, dni, fecha, AppDataSource.manager);
+        res.status(201).json({ turno: 'Turno agregado' });
+    } catch (error) {
+        res.status(500).json({ error: 'Error al agregar turno' });
+    }
+
 }
 
 
-export const addMotivoToDB = async () => {
-    mdb.map(async (p: Motive) => {
-        const newMotivo = new Motive(p.motivo, p.tiempo_estimado);
-        await AppDataSource.manager.save(newMotivo);
-    });
-}
+// export const addMotivoToDB = async () => {
+//     mdb.map(async (p: Motive) => {
+//         const newMotivo = new Motive(p.motivo, p.tiempo_estimado);
+//         await AppDataSource.manager.save(newMotivo);
+//     });
+// }
 
-export const addSucursalToDB = async () => {
-    sdb.map(async (p: Subsidiary) => {
-        const newSucursal = new Subsidiary(p.numero_sucursal, p.nombre_sucursal);
-        await AppDataSource.manager.save(newSucursal);
-    });
-}
+// export const addSucursalToDB = async () => {
+//     sdb.map(async (p: Subsidiary) => {
+//         const newSucursal = new Subsidiary(p.numero_sucursal, p.nombre_sucursal);
+//         await AppDataSource.manager.save(newSucursal);
+//     });
+// }
