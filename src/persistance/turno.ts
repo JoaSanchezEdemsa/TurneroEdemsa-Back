@@ -15,21 +15,26 @@ export class Turn {
   dni!: number;
 
   @Column()
-  fecha!: string;
+  created_at!: Date;
 
-  constructor(nombre: string, apellido: string, dni: number, fecha: string) {
+  @Column()
+  finalized_at!: Date;
+
+  constructor(nombre: string, apellido: string, dni: number, created_at: Date, finalized_at: Date, ) {
     this.nombre = nombre;
     this.apellido = apellido;
     this.dni = dni;
-    this.fecha = fecha;
-}
+    this.created_at = new Date();
+    this.finalized_at = new Date();
+    }
 
-static async agregarTurno(nombre: string, apellido: string, dni: number, fecha: string, entityManager: EntityManager):Promise <void> {
-    const newTurno = new Turn(nombre, apellido, dni, fecha);
+static async agregarTurno(nombre: string, apellido: string, dni: number, created_at: Date, finalized_at: Date,  entityManager: EntityManager):Promise <void> {
+    const newTurno = new Turn(nombre, apellido, dni, created_at, finalized_at);
     newTurno.nombre = nombre;
     newTurno.apellido = apellido;
     newTurno.dni = dni;
-    newTurno.fecha = fecha;
+    newTurno.created_at = new Date();
+    newTurno.finalized_at = new Date();
     await entityManager.save(newTurno);
 }
 }

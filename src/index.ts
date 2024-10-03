@@ -54,7 +54,7 @@ AppDataSource.initialize()
         const validation_turno = AppDataSource.getRepository(Turn);
         const turnos_exist = await validation_turno.find();
         if (turnos_exist.length == 0){
-            const turno = new Turn('Alfonso', 'Magallanes', 47332098, "3/10/2024");         
+            const turno = new Turn('Alfonso', 'Magallanes', 47332098, new Date(), new Date());
             console.log("---------------------------------AGREGADO--------------------------------------------")
             AppDataSource.manager.save(turno)
             console.log(turnos_exist)

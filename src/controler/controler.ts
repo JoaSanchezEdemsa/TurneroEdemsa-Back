@@ -20,11 +20,11 @@ export const getSucursal = async (_: Request, res: Response) => {
 }
 
 export const addTurnoToDB = async (req: Request, res: Response) => {
-    const { nombre, apellido, dni, fecha } = req.body;
+    const { nombre, apellido, dni, created_at, finalized_at } = req.body;
 
     try {
         
-        await Turn.agregarTurno(nombre, apellido, dni, fecha, AppDataSource.manager);
+        await Turn.agregarTurno(nombre, apellido, dni, created_at,finalized_at, AppDataSource.manager);
         res.status(201).json({ turno: 'Turno agregado' });
     } catch (error) {
         res.status(500).json({ error: 'Error al agregar turno' });
