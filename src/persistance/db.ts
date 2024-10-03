@@ -27,7 +27,7 @@ export type Turno ={
     nombre: string,
     apellido: string,
     dni: number,
-    fecha: Date
+    fecha: string
 }
 
 export type Motivo ={
@@ -49,7 +49,7 @@ export const tdb:Array <Turno> = [
         nombre: 'Alfonso',
         apellido: 'Magallanes',
         dni: 47332098,        
-        fecha: new Date()
+        fecha: "3/10/2024"
     },
 ]
 

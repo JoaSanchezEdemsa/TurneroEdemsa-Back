@@ -49,18 +49,39 @@ app.get('/', (_,res) => {
 AppDataSource.initialize()
     .then(async() => {
         console.log('Base de datos conectada');
+
+//Validación turnos        
         const validation_turno = AppDataSource.getRepository(Turn);
         const turnos_exist = await validation_turno.find();
         if (turnos_exist.length == 0){
-            const turno = new Turn('Alfonso', 'Magallanes', 47332098, new Date());
-            const motivo = new Motive('Reclamo', '5 minutos');
-            const sucursal = new Subsidiary(1301, 'Las Heras');            
-            AppDataSource.manager.save([turno, motivo, sucursal])
+            const turno = new Turn('Alfonso', 'Magallanes', 47332098, "3/10/2024");         
+            AppDataSource.manager.save(turno)
             console.log(turnos_exist)
         }
+        
+//Validación motivos
+        const validation_motivo = AppDataSource.getRepository(Motive);
+        const motivos_exist = await validation_motivo.find();
+        if (motivos_exist.length == 0){
+            const motivo = new Motive('Reclamo', '5 minutos');
+            AppDataSource.manager.save(motivo)
+            console.log(motivos_exist)
+        }
+
+//Validación sucursales
+        const validation_sucursal = AppDataSource.getRepository(Subsidiary);
+        const sucursales_exist = await validation_sucursal.find();
+        if (sucursales_exist.length == 0){
+            const sucursal = new Subsidiary(1301, 'Las Heras');
+            AppDataSource.manager.save(sucursal)
+            console.log(sucursales_exist)
+        }
+
+//Puerto de conexión
         app.listen(port, () => {
             console.log(`Servidor: http://localhost:${port}`);
         });
+
 })
     .catch(err => {
         throw err

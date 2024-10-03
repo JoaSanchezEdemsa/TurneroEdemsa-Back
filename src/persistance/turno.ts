@@ -15,9 +15,9 @@ export class Turn {
   dni!: number;
 
   @Column()
-  fecha!: Date;
+  fecha!: string;
 
-  constructor(nombre: string, apellido: string, dni: number, fecha: Date) {
+  constructor(nombre: string, apellido: string, dni: number, fecha: string) {
     this.nombre = nombre;
     this.apellido = apellido;
     this.dni = dni;

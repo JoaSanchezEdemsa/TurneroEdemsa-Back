@@ -10,7 +10,7 @@ mainRouter.get('/', (_, res) => {
 mainRouter.get('/turno/ver_turno', getTurno);
 mainRouter.get('/motivo/ver_motivo', getMotivo);
 mainRouter.get('/sucursal/ver_sucursal', getSucursal);
-mainRouter.post('/turno/agregar', addTurnoToDB);
+mainRouter.post('/turno/:agregar', addTurnoToDB);
 
 
 

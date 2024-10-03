@@ -26,6 +26,7 @@ export const addTurnoToDB = async () => {
     });
 }
 
+
 export const addMotivoToDB = async () => {
     mdb.map(async (p: Motive) => {
         const newMotivo = new Motive(p.motivo, p.tiempo_estimado);
