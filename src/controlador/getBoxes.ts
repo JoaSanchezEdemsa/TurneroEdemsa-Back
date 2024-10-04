@@ -10,17 +10,17 @@ export const getBoxes = async () => {
 
     // Solicitud a la API externa con el body que incluye COD_UNICOM
     const response = await axios.post('http://api.edemsa.local/turnero/sucursales/getboxes', {
-      COD_UNICOM: '1201' // Enviar COD_UNICOM en el cuerpo de la solicitud
+      COD_UNICOM: '1201' 
     }, {
       headers: {    
         'Authorization': `Basic ${authToken}`,
-        'Content-Type': 'application/json' // Asegurar que el body sea JSON
+        'Content-Type': 'application/json' 
       }
     });
 
     return response.data; // Retorna los datos de la API
   } catch (error) {
     console.error('Error fetching data:', error);
-    throw new Error('Error fetching data from API'); // Lanza el error para que lo maneje el archivo principal
+    throw new Error('Error fetching data from API'); 
   }
 };

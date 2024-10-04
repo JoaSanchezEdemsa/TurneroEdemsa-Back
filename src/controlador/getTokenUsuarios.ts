@@ -1,5 +1,5 @@
 import axios from 'axios';
-import FormData from 'form-data'; // Importar la clase FormData
+import FormData from 'form-data';
 
 const username = "turnero"; 
 const password = "qY#hvVweRlkHp4L8@B"; 
