@@ -13,11 +13,6 @@ const port = 8080;
 
 app.use(express.json());
 
-app.use('/', autenticacionUsuario, (req, res) => {
-    res.send('Bienvenido a la página de inicio');
-});
-
-
 // Función para obtener los datos de las sucursales
 
 app.get('/getsucursales', async (req: Request, res: Response) => {
@@ -78,6 +73,11 @@ app.get('/login', async (req: Request, res: Response) => {
         res.status(500).json({ message: 'Error fetching data from API' });
     }
 });
+
+app.use('/', autenticacionUsuario, (req, res) => {
+    res.send('Bienvenido a la página de inicio');
+});
+
 
 // Función para obtener los permisos de los usuarios
 
