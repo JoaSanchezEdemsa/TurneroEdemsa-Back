@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import { getSucursales } from './controlador/getSucursales'; 
 import { getBoxes } from './controlador/getBoxes';
 import { getEmpleados } from './controlador/getUsuarios';
-import { getTokenEmpleados } from './controlador/getTokenUsuarios';
+import { getTokenUsuarios } from './controlador/getTokenUsuarios';
 import autenticacionUsuario from './autenticaciones/loginAutenticar';
 import * as dotenv from 'dotenv';
 
@@ -12,6 +12,11 @@ const app = express();
 const port = 8080;
 
 app.use(express.json());
+
+app.use('/', autenticacionUsuario, (req, res) => {
+    res.send('Bienvenido a la página de inicio');
+});
+
 
 // Función para obtener los datos de las sucursales
 
@@ -65,7 +70,7 @@ app.get('/login', async (req: Request, res: Response) => {
 
         const token = req.query.token as string;
 
-        const empleado = await getTokenEmpleados(token); 
+        const empleado = await getTokenUsuarios(token); 
         res.json(empleado); 
 
     } catch (error) {
@@ -74,9 +79,7 @@ app.get('/login', async (req: Request, res: Response) => {
     }
 });
 
-app.use('/', autenticacionUsuario, (req, res) => {
-    res.send('Bienvenido a la página de inicio');
-});
+// Función para obtener los permisos de los usuarios
 
 app.listen(port, () => {
   console.log(`El server está corriendo en el puerto: http://turnero:${port}`);

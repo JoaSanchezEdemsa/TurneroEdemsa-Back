@@ -5,7 +5,7 @@ const username = "turnero";
 const password = "qY#hvVweRlkHp4L8@B"; 
 
 // Función para obtener los empleados según el token proporcionado
-export const getTokenEmpleados = async (token: string) => {
+export const getTokenUsuarios = async (token: string) => {
   try {
     const authToken = Buffer.from(`${username}:${password}`).toString('base64');
 
