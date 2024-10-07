@@ -3,7 +3,7 @@ import { getSucursales } from './controlador/funciones_get/getSucursales';
 import { getBoxes } from './controlador/funciones_get/getBoxes';
 import { getEmpleados } from './controlador/funciones_get/getUsuarios';
 import { getTokenUsuarios } from './controlador/funciones_get/getTokenUsuarios';
-//import autenticacionUsuario from './autenticaciones/loginAutenticar';
+import autenticacionUsuario from './autenticaciones/loginAutenticar';
 import { postBoxes } from './controlador/funciones_post/postBoxes';
 import * as dotenv from 'dotenv';
 import cors from 'cors';
@@ -55,6 +55,7 @@ app.get('/login', async (req: Request, res: Response) => {
     const token = req.query.token as string;
     const empleado = await getTokenUsuarios(token); 
     res.json(empleado); 
+    console.log(empleado);
   } catch (error) {
     console.error('Error fetching data:', error); 
     res.status(500).json({ message: 'Error fetching data from API' });
@@ -62,8 +63,9 @@ app.get('/login', async (req: Request, res: Response) => {
 });
 
 // Middleware para autenticación y página de inicio
-app.use('/', (req, res) => {   //añadir luego de la barra la siguiente var: autenticacionUsuario
+app.use('/', autenticacionUsuario, (req, res) => {
   res.send('Bienvenido a la página de inicio');
+
 });
 
 // Inicialización del servidor
