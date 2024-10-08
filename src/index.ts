@@ -17,7 +17,12 @@ dotenv.config();
 const app = express();
 const port = 8080;
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000', // Permitir el origen de tu frontend
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'], // Permitir encabezados específicos
+}));
+
 
 app.use(express.json());
 
@@ -45,12 +50,13 @@ app.get('/getboxes', async (req: Request, res: Response) => {
 
 // Funcion para obtener el DNI y enviarlo al frontend
 
-app.get('/getclientes', async (req: Request, res: Response) => {
+app.post('/getclientes', async (req: Request, res: Response) => {
   try {
-    const cliente = await getClientesbyDNI("10208071");
-    console.log(cliente); 
-    //await postBoxes(cliente); 
-    //res.json(cliente); 
+    const { dni } = req.body; // Obtiene el valor del DNI del cuerpo de la solicitud
+    const cliente = await getClientesbyDNI(dni); // Llama a la función con el DNI recibido
+    console.log(cliente);
+    // await postBoxes(cliente);
+    res.json(cliente); // Devuelve el cliente encontrado
   } catch (error) {
     res.status(500).json({ message: 'Error fetching data from API' });
   }
