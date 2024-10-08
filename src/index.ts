@@ -3,10 +3,13 @@ import { getSucursales } from './controlador/funciones_get/getSucursales';
 import { getBoxes } from './controlador/funciones_get/getBoxes';
 import { getEmpleados } from './controlador/funciones_get/getUsuarios';
 import { getTokenUsuarios } from './controlador/funciones_get/getTokenUsuarios';
+import { Empleado } from './models/Empleado';  
 import autenticacionUsuario from './autenticaciones/loginAutenticar';
 import { postBoxes } from './controlador/funciones_post/postBoxes';
 import * as dotenv from 'dotenv';
 import cors from 'cors';
+import 'reflect-metadata';
+import { AppDataSource } from './models/db';
 
 dotenv.config();
 
@@ -49,16 +52,73 @@ app.get('/getusuarios', async (req: Request, res: Response) => {
   }
 });
 
-// Función para extraer el token desde los parámetros de consulta
 app.get('/login', async (req: Request, res: Response) => {
   try {
     const token = req.query.token as string;
-    const empleado = await getTokenUsuarios(token); 
-    res.json(empleado); 
-    console.log(empleado);
+
+    // Obtener datos del empleado desde el token
+    const empleadoData = await getTokenUsuarios(token); 
+    console.log('Empleado obtenido:', empleadoData);
+
+    // Revisar si ya existe un empleado con el legajo en la base de datos
+    const empleadoRepository = AppDataSource.getRepository(Empleado);
+    let empleadoExistente = await empleadoRepository.findOneBy({ legajo: empleadoData.result.legajo }); // Ajuste aquí para acceder al objeto result
+
+    // Si no existe, lo guardamos
+    if (!empleadoExistente) {
+      const nuevoEmpleado = empleadoRepository.create({
+        legajo: empleadoData.result.legajo,
+        usuario: empleadoData.result.USUARIO, // Ajustado para acceder correctamente
+        COD_UNICOM: empleadoData.result.COD_UNICOM,
+        nombrecompleto: empleadoData.result.nombrecompleto,
+        nombre: empleadoData.result.nombre,
+        apellido: empleadoData.result.apellido,
+        email: empleadoData.result.email,
+        posicion: empleadoData.result.posicion,
+        telefono: empleadoData.result.telefono,
+        celular: empleadoData.result.celular, // Añadido
+        direccion: empleadoData.result.direccion,
+        lugar: empleadoData.result.lugar, // Añadido
+        tipoDoc: empleadoData.result.tipoDoc, // Añadido
+        dni: empleadoData.result.dni, // Añadido
+        nacimiento: empleadoData.result.nacimiento, // Añadido
+        edad: empleadoData.result.edad, // Añadido
+        sexo: empleadoData.result.sexo, // Añadido
+        tipousuario: empleadoData.result.tipousuario, //
+        empresa: empleadoData.result.empresa, // Añadido
+        interno: empleadoData.result.interno, // Añadido
+        bloqueado: empleadoData.result.bloqueado, // Añadido
+        baja: empleadoData.result.baja, // Añadido
+        pass: empleadoData.result.pass, // Añadido
+        created_at: empleadoData.result.created_at, // Añadido
+        created_by: empleadoData.result.created_by, // Añadido
+        autorizado_at: empleadoData.result.autorizado_at, // Añadido
+        autorizado_by: empleadoData.result.autorizado_by, // Añadido
+      });
+
+      // Guardar en la base de datos
+      empleadoExistente = await empleadoRepository.save(nuevoEmpleado);
+    }
+
+    // Responder con los datos del empleado guardado o existente
+    res.json(empleadoExistente); 
+    console.log('Empleado guardado/existente:', empleadoExistente);
+
   } catch (error) {
-    console.error('Error fetching data:', error); 
-    res.status(500).json({ message: 'Error fetching data from API' });
+    console.error('Error fetching or saving data:', error); 
+    res.status(500).json({ message: 'Error fetching or saving data' });
+  }
+});
+
+app.get('/empleados', async (req: Request, res: Response) => {
+  try {
+    const empleadoRepository = AppDataSource.getRepository(Empleado);
+    const empleados = await empleadoRepository.find();
+    res.json(empleados);
+    console.log("---------------------------------------------------------",empleados)
+  } catch (error) {
+    console.error('Error fetching empleados:', error);
+    res.status(500).json({ message: 'Error fetching empleados' });
   }
 });
 
@@ -72,3 +132,17 @@ app.use('/', autenticacionUsuario, (req, res) => {
 app.listen(port, () => {
   console.log(`El server está corriendo en el puerto: http://turnero:${port}`);
 });
+
+async function main() {
+  try{
+      await AppDataSource.initialize();
+      console.log('Database connected')
+      app.listen(8081);
+      console.log('Server is listening on port', 8081);
+    }
+    catch(error){
+        console.log(error);
+    } 
+}
+
+main();
