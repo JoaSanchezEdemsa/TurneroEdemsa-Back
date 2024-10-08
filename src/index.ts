@@ -6,6 +6,7 @@ import { getTokenUsuarios } from './controlador/funciones_get/getTokenUsuarios';
 import { Empleado } from './models/Empleado';  
 import autenticacionUsuario from './autenticaciones/loginAutenticar';
 import { postBoxes } from './controlador/funciones_post/postBoxes';
+import { getClientesbyDNI } from './controlador/funciones_get/getClientesbyDNI';
 import * as dotenv from 'dotenv';
 import cors from 'cors';
 import 'reflect-metadata';
@@ -37,6 +38,19 @@ app.get('/getboxes', async (req: Request, res: Response) => {
     console.log(boxes); 
     await postBoxes(boxes); 
     res.json(boxes); 
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching data from API' });
+  }
+});
+
+// Funcion para obtener el DNI y enviarlo al frontend
+
+app.get('/getclientes', async (req: Request, res: Response) => {
+  try {
+    const cliente = await getClientesbyDNI("10208071");
+    console.log(cliente); 
+    //await postBoxes(cliente); 
+    //res.json(cliente); 
   } catch (error) {
     res.status(500).json({ message: 'Error fetching data from API' });
   }
