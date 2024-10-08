@@ -10,6 +10,7 @@ import * as dotenv from 'dotenv';
 import cors from 'cors';
 import 'reflect-metadata';
 import { AppDataSource } from './models/db';
+import { postTvStatus } from './controlador/funciones_post/tvStatus';
 
 dotenv.config();
 
@@ -119,6 +120,16 @@ app.get('/empleados', async (req: Request, res: Response) => {
   } catch (error) {
     console.error('Error fetching empleados:', error);
     res.status(500).json({ message: 'Error fetching empleados' });
+  }
+});
+
+// Función para obtener tv/status
+app.get('/tv/status', async (req: Request, res: Response) => {
+  try {
+    const tvStatus = await postTvStatus();
+    res.json(tvStatus);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching data from API' });
   }
 });
 
