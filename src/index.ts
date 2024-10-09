@@ -54,16 +54,16 @@ app.post('/getclientes', async (req: Request, res: Response) => {
 });
 
 // Función para obtener las cajas de las sucursales y hacer un POST al frontend
-app.get('/getboxes', async (req: Request, res: Response) => {
-  try {
-    const boxes = await getBoxes();
-    console.log(boxes); 
-    await postBoxes(boxes); 
-    res.json(boxes); 
-  } catch (error) {
-    res.status(500).json({ message: 'Error fetching data from API' });
-  }
-});
+// app.get('/getboxes', async (req: Request, res: Response) => {
+//   try {
+//     const boxes = await getBoxes();
+//     console.log(boxes); 
+//     await postBoxes(boxes); 
+//     res.json(boxes); 
+//   } catch (error) {
+//     res.status(500).json({ message: 'Error fetching data from API' });
+//   }
+// });
 
 // Función para obtener los usuarios
 app.get('/getusuarios', async (req: Request, res: Response) => {
@@ -92,7 +92,7 @@ app.get('/login', async (req: Request, res: Response) => {
       const nuevoEmpleado = empleadoRepository.create({
         legajo: empleadoData.result.legajo,
         usuario: empleadoData.result.USUARIO, 
-        COD_UNICOM: empleadoData.result.COD_UNICOM,
+        COD_UNICOM: empleadoData.result.usuarioOPEN.COD_UNICOM,
         nombrecompleto: empleadoData.result.nombrecompleto,
         nombre: empleadoData.result.nombre,
         apellido: empleadoData.result.apellido,
@@ -132,6 +132,22 @@ app.get('/login', async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Error fetching or saving data' });
   }
 });
+
+app.get('/cajas/:codUnicom', async (req: Request, res: Response) => {
+  const codUnicom = req.params.codUnicom;
+
+  try {
+    // Llamar a la función que obtiene las cajas con el COD_UNICOM
+    const cajas = await getBoxes(codUnicom);
+
+    // Devuelve las cajas obtenidas
+    res.json(cajas);
+  } catch (error) {
+    console.error('Error fetching boxes:', error);
+    res.status(500).json({ message: 'Error fetching boxes' });
+  }
+});
+
 
 app.get('/empleados', async (req: Request, res: Response) => {
   try {
