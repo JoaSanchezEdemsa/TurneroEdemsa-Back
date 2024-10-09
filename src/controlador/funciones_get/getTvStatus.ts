@@ -1,10 +1,5 @@
 import axios from 'axios';
-import cors from 'cors';
-import express from 'express';
 
-
-const app = express();
-app.use(cors()); // Permite CORS para todas las rutas
 const username = "turnero"; 
 const password = "qY#hvVweRlkHp4L8@B"; 
 
