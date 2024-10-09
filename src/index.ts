@@ -6,7 +6,7 @@ import { getTokenUsuarios } from './controlador/funciones_get/getTokenUsuarios';
 import { Empleado } from './models/Empleado';  
 import autenticacionUsuario from './autenticaciones/loginAutenticar';
 import { postBoxes } from './controlador/funciones_post/postBoxes';
-import { getClientesbyDNI } from './controlador/funciones_get/getClientesbyDNI';
+//import { getClientesbyDNI } from './controlador/funciones_get/getClientesbyDNI';
 import { AppDataSource } from './models/db';
 import { postTvStatus } from './controlador/funciones_get/getTvStatus';
 import * as dotenv from 'dotenv';
@@ -49,20 +49,6 @@ app.get('/getboxes', async (req: Request, res: Response) => {
   }
 });
 
-// Funcion para obtener el DNI y enviarlo al frontend
-
-app.post('/getclientes', async (req: Request, res: Response) => {
-  try {
-    const { dni } = req.body; 
-    const cliente = await getClientesbyDNI(dni); 
-    console.log(cliente);
-    await postBoxes(cliente);
-    res.json(cliente); // Devuelve el cliente encontrado
-  } catch (error) {
-    res.status(500).json({ message: 'Error fetching data from API' });
-  }
-});
-
 // Función para obtener los usuarios
 app.get('/getusuarios', async (req: Request, res: Response) => {
   try {
@@ -89,7 +75,7 @@ app.get('/login', async (req: Request, res: Response) => {
     if (!empleadoExistente) {
       const nuevoEmpleado = empleadoRepository.create({
         legajo: empleadoData.result.legajo,
-        usuario: empleadoData.result.USUARIO, // Ajustado para acceder correctamente
+        usuario: empleadoData.result.USUARIO, 
         COD_UNICOM: empleadoData.result.COD_UNICOM,
         nombrecompleto: empleadoData.result.nombrecompleto,
         nombre: empleadoData.result.nombre,
@@ -97,24 +83,24 @@ app.get('/login', async (req: Request, res: Response) => {
         email: empleadoData.result.email,
         posicion: empleadoData.result.posicion,
         telefono: empleadoData.result.telefono,
-        celular: empleadoData.result.celular, // Añadido
+        celular: empleadoData.result.celular, 
         direccion: empleadoData.result.direccion,
-        lugar: empleadoData.result.lugar, // Añadido
-        tipoDoc: empleadoData.result.tipoDoc, // Añadido
-        dni: empleadoData.result.dni, // Añadido
-        nacimiento: empleadoData.result.nacimiento, // Añadido
-        edad: empleadoData.result.edad, // Añadido
-        sexo: empleadoData.result.sexo, // Añadido
-        tipousuario: empleadoData.result.tipousuario, //
-        empresa: empleadoData.result.empresa, // Añadido
-        interno: empleadoData.result.interno, // Añadido
-        bloqueado: empleadoData.result.bloqueado, // Añadido
-        baja: empleadoData.result.baja, // Añadido
-        pass: empleadoData.result.pass, // Añadido
-        created_at: empleadoData.result.created_at, // Añadido
-        created_by: empleadoData.result.created_by, // Añadido
-        autorizado_at: empleadoData.result.autorizado_at, // Añadido
-        autorizado_by: empleadoData.result.autorizado_by, // Añadido
+        lugar: empleadoData.result.lugar, 
+        tipoDoc: empleadoData.result.tipoDoc, 
+        dni: empleadoData.result.dni, 
+        nacimiento: empleadoData.result.nacimiento, 
+        edad: empleadoData.result.edad, 
+        sexo: empleadoData.result.sexo, 
+        tipousuario: empleadoData.result.tipousuario, 
+        empresa: empleadoData.result.empresa, 
+        interno: empleadoData.result.interno, 
+        bloqueado: empleadoData.result.bloqueado, 
+        baja: empleadoData.result.baja, 
+        pass: empleadoData.result.pass,
+        created_at: empleadoData.result.created_at, 
+        created_by: empleadoData.result.created_by, 
+        autorizado_at: empleadoData.result.autorizado_at, 
+        autorizado_by: empleadoData.result.autorizado_by, 
       });
 
       // Guardar en la base de datos
@@ -152,6 +138,12 @@ app.get('/tv/status', async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Error fetching data from API' });
   }
 });
+
+// CCOMIENZO SECCION TABLET
+
+
+
+// FIN SECCION TABLET
 
 // Middleware para autenticación y página de inicio
 app.use('/', autenticacionUsuario, (req, res) => {
