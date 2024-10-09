@@ -11,19 +11,19 @@ export const getClientesbyDNI = async (dni: string) => {
 
     // Crear un nuevo objeto FormData
     const formData = new FormData();
-    formData.append('dni', dni); // Usar la variable token en lugar de un valor fijo
+    formData.append('dni', dni); 
 
     // Solicitud a la API externa con el body en formato form-data
     const response = await axios.post('http://api.edemsa.local/turnero/sucursales/tablet/turnos/new/getclientebydni', formData, {
       headers: {    
         'Authorization': `Basic ${authAPI}`,
-        ...formData.getHeaders() // Incluir los headers de form-data automáticamente
+        ...formData.getHeaders() 
       }
     });
 
     return response.data; // Retorna los datos de la API
   } catch (error) {
     console.error('Error fetching data:', error);
-    throw new Error('Error fetching data from API'); // Lanza el error para que lo maneje el archivo principal
+    throw new Error('Error fetching data from API'); 
   }
 };

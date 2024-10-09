@@ -7,10 +7,11 @@ import { Empleado } from './models/Empleado';
 import autenticacionUsuario from './autenticaciones/loginAutenticar';
 import { postBoxes } from './controlador/funciones_post/postBoxes';
 import { getClientesbyDNI } from './controlador/funciones_get/getClientesbyDNI';
+import { AppDataSource } from './models/db';
 import * as dotenv from 'dotenv';
 import cors from 'cors';
 import 'reflect-metadata';
-import { AppDataSource } from './models/db';
+import { postTvStatus } from './controlador/funciones_post/tvStatus';
 
 dotenv.config();
 
@@ -18,9 +19,9 @@ const app = express();
 const port = 8080;
 
 app.use(cors({
-  origin: 'http://localhost:3000', // Permitir el origen de tu frontend
+  origin: 'http://localhost:3000', 
   methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'], // Permitir encabezados específicos
+  allowedHeaders: ['Content-Type', 'Authorization'], 
 }));
 
 
@@ -52,10 +53,10 @@ app.get('/getboxes', async (req: Request, res: Response) => {
 
 app.post('/getclientes', async (req: Request, res: Response) => {
   try {
-    const { dni } = req.body; // Obtiene el valor del DNI del cuerpo de la solicitud
-    const cliente = await getClientesbyDNI(dni); // Llama a la función con el DNI recibido
+    const { dni } = req.body; 
+    const cliente = await getClientesbyDNI(dni); 
     console.log(cliente);
-    // await postBoxes(cliente);
+    await postBoxes(cliente);
     res.json(cliente); // Devuelve el cliente encontrado
   } catch (error) {
     res.status(500).json({ message: 'Error fetching data from API' });
@@ -139,6 +140,16 @@ app.get('/empleados', async (req: Request, res: Response) => {
   } catch (error) {
     console.error('Error fetching empleados:', error);
     res.status(500).json({ message: 'Error fetching empleados' });
+  }
+});
+
+// Función para obtener tv/status
+app.get('/tv/status', async (req: Request, res: Response) => {
+  try {
+    const tvStatus = await postTvStatus();
+    res.json(tvStatus);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching data from API' });
   }
 });
 
