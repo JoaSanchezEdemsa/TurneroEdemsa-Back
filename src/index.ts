@@ -6,7 +6,7 @@ import { getTokenUsuarios } from './controlador/funciones_get/getTokenUsuarios';
 import { Empleado } from './models/Empleado';  
 import autenticacionUsuario from './autenticaciones/loginAutenticar';
 import { postBoxes } from './controlador/funciones_post/postBoxes';
-//import { getClientesbyDNI } from './controlador/funciones_get/getClientesbyDNI';
+import { getClientesbyDNI } from './controlador/funciones_get/getClientesbyDNI';
 import { AppDataSource } from './models/db';
 import { postTvStatus } from './controlador/funciones_get/getTvStatus';
 import * as dotenv from 'dotenv';
@@ -33,6 +33,22 @@ app.get('/getsucursales', async (req: Request, res: Response) => {
     const sucursales = await getSucursales();
     res.json(sucursales);
   } catch (error) {
+    res.status(500).json({ message: 'Error fetching data from API' });
+  }
+});
+
+app.post('/getclientes', async (req: Request, res: Response) => {
+  try {
+    const dni = req.body.dni as string; 
+    const cliente = await getClientesbyDNI(dni);
+    // Verifica si el cliente existe
+    if (cliente.result != false) {
+      res.json({ usuarioExiste: true, cliente: cliente.result }); // Retorna true y los datos del cliente
+    } else {
+      res.json({ usuarioExiste: false }); // Retorna true indicando que el usuario no existe
+    }
+  } catch (error) {
+    console.error('Error al obtener el cliente:', error);
     res.status(500).json({ message: 'Error fetching data from API' });
   }
 });
@@ -139,11 +155,10 @@ app.get('/tv/status', async (req: Request, res: Response) => {
   }
 });
 
-// CCOMIENZO SECCION TABLET
 
 
 
-// FIN SECCION TABLET
+//endpoint para tablet /getmotivobysucursal
 
 // Middleware para autenticación y página de inicio
 app.use('/', autenticacionUsuario, (req, res) => {

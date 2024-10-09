@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('empleados') // Se puede agregar un nombre de tabla aquí
+@Entity('empleados') 
 export class Empleado {
   @PrimaryGeneratedColumn()
   id!: number;
@@ -9,10 +9,10 @@ export class Empleado {
   legajo!: number;
 
   @Column()
-  usuario!: string; // Asumí que es el nombre de usuario, ajusta si es necesario
+  usuario!: string; 
 
   @Column({ nullable: true })
-  COD_UNICOM!: number; // Si necesitas un valor único, puedes agregar unique: true
+  COD_UNICOM!: number; 
 
   @Column()
   nombrecompleto!: string;
@@ -36,55 +36,54 @@ export class Empleado {
   telefono!: string;
 
   @Column({ nullable: true })
-  celular!: string; // Agregado según tu objeto de empleado
+  celular!: string; 
 
   @Column({ nullable: true })
-  lugar!: string; // Agregado según tu objeto de empleado
+  lugar!: string; 
 
   @Column({ nullable: true })
-  tipoDoc!: string; // Agregado según tu objeto de empleado
+  tipoDoc!: string; 
 
   @Column({ nullable: true })
-  dni!: number; // Agregado según tu objeto de empleado
+  dni!: number; 
 
   @Column({ nullable: true })
-  nacimiento!: string; // Puedes usar Date si prefieres un objeto de fecha
+  nacimiento!: string; 
 
   @Column({ nullable: true })
-  edad!: number; // Agregado según tu objeto de empleado
+  edad!: number; 
 
   @Column({ nullable: true })
-  sexo!: string; // Agregado según tu objeto de empleado
+  sexo!: string; 
 
   @Column({ nullable: true })
-  tipousuario!: string; // Agregado según tu objeto de empleado
+  tipousuario!: string; 
 
   @Column({ nullable: true })
-  empresa!: string; // Agregado según tu objeto de empleado
+  empresa!: string; 
 
   @Column({ nullable: true })
-  interno!: string; // Agregado según tu objeto de empleado
+  interno!: string; 
 
   @Column({ nullable: true })
-  bloqueado!: number; // Agregado según tu objeto de empleado
+  bloqueado!: number; 
 
   @Column({ nullable: true })
-  baja!: number; // Agregado según tu objeto de empleado
+  baja!: number; 
 
   @Column({ nullable: true })
-  pass!: string; // Agregado según tu objeto de empleado
+  pass!: string; 
 
   @Column({ nullable: true })
-  created_at!: Date; // Agregado según tu objeto de empleado
+  created_at!: Date; 
 
   @Column({ nullable: true })
-  created_by!: string; // Agregado según tu objeto de empleado
+  created_by!: string; 
 
   @Column({ nullable: true })
-  autorizado_at!: Date; // Agregado según tu objeto de empleado
+  autorizado_at!: Date; 
 
   @Column({ nullable: true })
-  autorizado_by!: string; // Agregado según tu objeto de empleado
-
-  // Puedes agregar más campos según necesites
+  autorizado_by!: string; 
+  
 }

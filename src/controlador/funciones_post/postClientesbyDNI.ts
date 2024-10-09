@@ -1,17 +1,18 @@
 import axios from 'axios';
 
-export const postClientesbyDNI = async (data2: any) => {
-    try{
-        const response = await axios.post('http://turnero:3000/getclientes', data2, {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
+// Función para enviar los datos obtenidos al frontend
+export const postClientesbyDNI = async (data: any) => {
+  try {
+    // Realiza el POST a la URL del frontend
+    const response = await axios.post('http://turnero:3000', data, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
 
-        console.log('Cliente obtenido:', response.status);
-    }
-    catch(error){
-        console.error('Error obteniendo cliente:', error);
-        throw new Error('Error obteniendo cliente');
-    }
+    console.log('Data posted to frontend:', response.status);
+  } catch (error) {
+    console.error('Error posting data to frontend:', error);
+    throw new Error('Error posting data to frontend');
+  }
 };
