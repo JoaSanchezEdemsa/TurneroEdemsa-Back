@@ -20,11 +20,12 @@ export const getSucursales = async () => {
       {
         headers: {
           'Authorization': `Basic ${authToken}`,
+          'Content-Type': 'application/json',
         }
       }
     );
 
-    return response.data; // Retorna los datos de la API
+    return response.data.result; // Retorna los datos de la API
   } catch (error) {
     console.error('Error fetching data:', error);
     throw new Error('Error fetching data from API'); // Lanza el error para que lo maneje el archivo principal
