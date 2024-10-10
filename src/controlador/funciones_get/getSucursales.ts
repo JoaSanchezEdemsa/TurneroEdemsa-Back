@@ -3,10 +3,10 @@ import express from 'express';
 import cors from 'cors';
 
 const app = express();
-app.use(cors()); 
+app.use(cors());
 
-const username = "turnero"; 
-const password = "qY#hvVweRlkHp4L8@B"; 
+const username = "turnero";
+const password = "qY#hvVweRlkHp4L8@B";
 
 // Función para obtener sucursales
 export const getSucursales = async () => {
@@ -14,11 +14,15 @@ export const getSucursales = async () => {
     const authToken = Buffer.from(`${username}:${password}`).toString('base64');
 
     // Solicitud a la API externa
-    const response = await axios.post('http://api.edemsa.local/turnero/getsucursales', {
-      headers: {
-        'Authorization': `Basic ${authToken}`
+    const response = await axios.post(
+      'http://api.edemsa.local/turnero/getsucursales', 
+      {}, 
+      {
+        headers: {
+          'Authorization': `Basic ${authToken}`,
+        }
       }
-    });
+    );
 
     return response.data; // Retorna los datos de la API
   } catch (error) {
