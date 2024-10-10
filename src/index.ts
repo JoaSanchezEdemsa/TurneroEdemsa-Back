@@ -4,12 +4,12 @@ import { getBoxes } from './controlador/funciones_get/getBoxes';
 import { getEmpleados } from './controlador/funciones_get/getUsuarios';
 import { getTokenUsuarios } from './controlador/funciones_get/getTokenUsuarios';
 import { Empleado } from './models/Empleado';  
-//import autenticacionUsuario from './autenticaciones/loginAutenticar';
+import autenticacionUsuario from './autenticaciones/loginAutenticar';
 import { postBoxes } from './controlador/funciones_post/postBoxes';
 import { getClientesbyDNI } from './controlador/funciones_get/getClientesbyDNI';
 import { AppDataSource } from './models/db';
 import { postTvStatus } from './controlador/funciones_get/getTvStatus';
-//import { postSucursales } from './controlador/funciones_post/postSucursales';
+import { postSucursales } from './controlador/funciones_post/postSucursales';
 import * as dotenv from 'dotenv';
 import cors from 'cors';
 import 'reflect-metadata';
@@ -32,7 +32,7 @@ app.get('/getsucursales', async (req: Request, res: Response) => {
   try {
     const sucursales = await getSucursales();
     res.json(sucursales);
-    //await postSucursales (sucursales);
+    await postSucursales (sucursales);
     res.json(sucursales);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching data from API' });
@@ -163,7 +163,7 @@ app.get('/tv/status', async (req: Request, res: Response) => {
 //endpoint para tablet /getmotivobysucursal
 
 // Middleware para autenticación y página de inicio
-app.use('/', (req, res) => {
+app.use('/', autenticacionUsuario, (req, res) => {
   res.send('Bienvenido a la página de inicio');
 
 });
