@@ -9,6 +9,7 @@ import { postBoxes } from './controlador/funciones_post/postBoxes';
 import { getClientesbyDNI } from './controlador/funciones_get/getClientesbyDNI';
 import { AppDataSource } from './models/db';
 import { postTvStatus } from './controlador/funciones_get/getTvStatus';
+import { postSucursales } from './controlador/funciones_post/postSucursales';
 import * as dotenv from 'dotenv';
 import cors from 'cors';
 import 'reflect-metadata';
@@ -24,13 +25,14 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'], 
 }));
 
-
 app.use(express.json());
 
 // Función para obtener los datos de las sucursales
 app.get('/getsucursales', async (req: Request, res: Response) => {
   try {
     const sucursales = await getSucursales();
+    res.json(sucursales);
+    await postSucursales (sucursales);
     res.json(sucursales);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching data from API' });
