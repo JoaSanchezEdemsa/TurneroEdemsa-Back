@@ -31,7 +31,7 @@ app.use(express.json());
 app.get('/getsucursales', async (req: Request, res: Response) => {
   try {
     const sucursales = await getSucursales();
-    res.json(sucursales);
+    console.log(sucursales);
     await postSucursales (sucursales);
     res.json(sucursales);
   } catch (error) {
@@ -149,9 +149,15 @@ app.get('/empleados', async (req: Request, res: Response) => {
 
 // Función para obtener tv/status
 app.get('/tv/status', async (req: Request, res: Response) => {
+  const { COD_UNICOM } = req.query; // Usa query en lugar de body
+
   try {
-    const tvStatus = await postTvStatus();
-    res.json(tvStatus);
+    if (COD_UNICOM) {
+      const tvStatus = await postTvStatus(COD_UNICOM as string); // Asegúrate de convertir a string
+      res.json(tvStatus);
+    } else {
+      res.status(400).json({ message: 'COD_UNICOM no proporcionado' });
+    }
   } catch (error) {
     res.status(500).json({ message: 'Error fetching data from API' });
   }
