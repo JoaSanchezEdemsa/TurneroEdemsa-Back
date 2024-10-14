@@ -54,19 +54,14 @@ app.post('/getclientes', async (req: Request, res: Response) => {
 });
 
 
-// Endpoint de login: obtiene el empleado y guarda si no existe
 app.get('/login', async (req: Request, res: Response) => {
   try {
     const token = req.query.token as string;
-
-    // Obtener datos del empleado desde el token
     const empleadoData = await getTokenUsuarios(token);
-    console.log('Empleado obtenido:', empleadoData);
 
     const empleadoRepository = AppDataSource.getRepository(Empleado);
     let empleadoExistente = await empleadoRepository.findOneBy({ legajo: empleadoData.result.legajo });
 
-    // Si no existe, lo guardamos
     if (!empleadoExistente) {
       const nuevoEmpleado = empleadoRepository.create({
         legajo: empleadoData.result.legajo,
@@ -97,36 +92,28 @@ app.get('/login', async (req: Request, res: Response) => {
         autorizado_at: empleadoData.result.autorizado_at, 
         autorizado_by: empleadoData.result.autorizado_by, 
       });
-
       empleadoExistente = await empleadoRepository.save(nuevoEmpleado);
     }
 
-    // Devolver el empleado guardado/existente con el COD_UNICOM
-    console.log("_______________________")
-    console.log(empleadoExistente)
     res.json(empleadoExistente);
-
   } catch (error) {
-    console.error('Error fetching or saving data:', error);
-    res.status(500).json({ message: 'Error fetching or saving data' });
+    console.error('Error en login:', error);
+    res.status(500).json({ message: 'Error en login' });
   }
 });
 
-// Endpoint para obtener las cajas según el COD_UNICOM del empleado
+// Endpoint para obtener cajas según el COD_UNICOM
 app.get('/getboxes', async (req: Request, res: Response) => {
-  const codUnicom = req.query.COD_UNICOM as string; // Obtener COD_UNICOM desde la query
-
   try {
-    const boxes = await getBoxes(codUnicom); // Llamada con el COD_UNICOM
+    const boxes = await getBoxes();
     res.json(boxes);
   } catch (error) {
-    console.error('Error fetching data from API:', error);
-    res.status(500).json({ message: 'Error fetching boxes from API' });
+    console.error('Error fetching boxes:', error);
+    res.status(500).json({ message: 'Error fetching boxes' });
   }
 });
 
-
-
+// Endpoint para obtener empleados
 app.get('/empleados', async (req: Request, res: Response) => {
   try {
     const empleadoRepository = AppDataSource.getRepository(Empleado);
@@ -193,3 +180,4 @@ async function main() {
 }
 
 main();
+
