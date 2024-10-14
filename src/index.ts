@@ -4,15 +4,16 @@ import { getBoxes } from './controlador/funciones_get/getBoxes';
 import { getEmpleados } from './controlador/funciones_get/getUsuarios';
 import { getTokenUsuarios } from './controlador/funciones_get/getTokenUsuarios';
 import { Empleado } from './models/Empleado';  
-import autenticacionUsuario from './autenticaciones/loginAutenticar';
 import { postBoxes } from './controlador/funciones_post/postBoxes';
 import { getClientesbyDNI } from './controlador/funciones_get/getClientesbyDNI';
 import { AppDataSource } from './models/db';
 import { postTvStatus } from './controlador/funciones_get/getTvStatus';
-import { postSucursales } from './controlador/funciones_post/postSucursales';
+import { getMotivosBySucursal } from './controlador/funciones_get/getMotivosBySucursal';
+import autenticacionUsuario from './autenticaciones/loginAutenticar';
 import * as dotenv from 'dotenv';
 import cors from 'cors';
 import 'reflect-metadata';
+import axios from 'axios';
 
 dotenv.config();
 
@@ -27,15 +28,48 @@ app.use(cors({
 
 app.use(express.json());
 
+const username = "turnero";
+const password = "qY#hvVweRlkHp4L8@B";
+
 // Función para obtener los datos de las sucursales
 app.get('/getsucursales', async (req: Request, res: Response) => {
   try {
     const sucursales = await getSucursales();
     console.log(sucursales);
-    await postSucursales (sucursales);
     res.json(sucursales);
   } catch (error) { 
     res.status(500).json({ message: 'Error fetching data from API' });
+  }
+});
+
+app.get('/getmotivos', async (req: Request, res: Response) => {
+  try {
+      const COD_UNICOM = req.query.COD_UNICOM as string;
+      const motivos = await getMotivosBySucursal(COD_UNICOM);
+      res.json(motivos);
+  } catch (error) {
+      res.status(500).json({ message: 'Error fetching data from API' });
+  }
+});
+
+app.post('/submitmotivo', async (req: Request, res: Response) => {
+  try {
+      const authToken = Buffer.from(`${username}:${password}`).toString('base64');
+      const { dni, nombre, motivo, sucursal } = req.body;
+      const response = await axios.post('http://api.edemsa.local/turnero/sucursales/tablet/turnos/new/save', { dni, nombre, motivo, sucursal }, {
+          headers: {
+              'Authorization': `Basic ${authToken}`,
+              'Content-Type': 'application/json'
+          }
+      });
+      if (response.status === 200) {
+          res.sendStatus(200); // Confirmar la recepción al frontend
+      } else {
+          res.status(500).json({ message: 'Error enviando datos a la API externa' });
+      }
+  } catch (error) {
+      console.error('Error enviando datos:', error);
+      res.status(500).json({ message: 'Error enviando datos a la API externa' });
   }
 });
 
