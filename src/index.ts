@@ -14,6 +14,7 @@ import * as dotenv from 'dotenv';
 import cors from 'cors';
 import 'reflect-metadata';
 import axios from 'axios';
+import qs from 'qs'
 
 dotenv.config();
 
@@ -54,22 +55,30 @@ app.get('/getmotivos', async (req: Request, res: Response) => {
 
 app.post('/submitmotivo', async (req: Request, res: Response) => {
   try {
-      const authToken = Buffer.from(`${username}:${password}`).toString('base64');
-      const { dni, nombre, motivo, sucursal } = req.body;
-      const response = await axios.post('http://api.edemsa.local/turnero/sucursales/tablet/turnos/new/save', { dni, nombre, motivo, sucursal }, {
-          headers: {
-              'Authorization': `Basic ${authToken}`,
-              'Content-Type': 'application/json'
-          }
-      });
-      if (response.status === 200) {
-          res.sendStatus(200); // Confirmar la recepción al frontend
-      } else {
-          res.status(500).json({ message: 'Error enviando datos a la API externa' });
+    const authToken = Buffer.from(`${username}:${password}`).toString('base64');
+    const { dni, nombre, motivo, sucursal } = req.body;
+
+    const data = qs.stringify({ dni, nombre, motivo, sucursal }); 
+
+    const response = await axios.post(
+      'http://api.edemsa.local/turnero/sucursales/tablet/turnos/new/save',
+      data,
+      {
+        headers: {
+          'Authorization': `Basic ${authToken}`,
+          'Content-Type': 'application/x-www-form-urlencoded', 
+        },
       }
-  } catch (error) {
-      console.error('Error enviando datos:', error);
+    );
+
+    if (response.status === 200) {
+      res.sendStatus(200); 
+    } else {
       res.status(500).json({ message: 'Error enviando datos a la API externa' });
+    }
+  } catch (error) {
+    console.error('Error enviando datos:', error);
+    res.status(500).json({ message: 'Error enviando datos a la API externa' });
   }
 });
 
@@ -78,9 +87,9 @@ app.post('/getclientes', async (req: Request, res: Response) => {
     const dni = req.body.dni as string; 
     const cliente = await getClientesbyDNI(dni);
     if (cliente.result != false) {
-      res.json({ usuarioExiste: true, cliente: cliente.result }); // Retorna true y los datos del cliente
+      res.json({ usuarioExiste: true, cliente: cliente.result }); 
     } else {
-      res.json({ usuarioExiste: false }); // Retorna true indicando que el usuario no existe
+      res.json({ usuarioExiste: false }); 
     }
   } catch (error) {
     console.error('Error al obtener el cliente:', error);
