@@ -206,25 +206,14 @@ app.get('/tv/status', async (req: Request, res: Response) => {
   }
 });
 
-app.get('/getsucursalesTV', async (req: Request, res: Response) => {
-  try {
-    const sucursales = await getSucursales();
-    console.log(sucursales);
-    await postSucursales (sucursales);
-    res.json(sucursales);
-  } catch (error) {
-    res.status(500).json({ message: 'Error fetching data from API' });
-  }
-});
 
 
 
 //endpoint para tablet /getmotivobysucursal
 
 // Middleware para autenticación y página de inicio
-app.use('/',(req, res) => {
+app.use('/', autenticacionUsuario, (req, res) => {
   res.send('Bienvenido a la página de inicio');
-
 });
 
 // Inicialización del servidor
