@@ -1,10 +1,10 @@
 import express, { Request, Response } from 'express';
 import { getSucursales } from './controlador/funciones_get/getSucursales'; 
-import { getBoxes } from './controlador/funciones_get/getBoxes';
+// import { getBoxes } from './controlador/funciones_get/getBoxes';
 // import { getEmpleados } from './controlador/funciones_get/getUsuarios';
 import { getTokenUsuarios } from './controlador/funciones_get/getTokenUsuarios';
 import { Empleado } from './models/Empleado';  
-import { postBoxes } from './controlador/funciones_post/postBoxes';
+// import { postBoxes } from './controlador/funciones_post/postBoxes';
 import { getClientesbyDNI } from './controlador/funciones_get/getClientesbyDNI';
 import { AppDataSource } from './models/db';
 import { postTvStatus } from './controlador/funciones_get/getTvStatus';
@@ -89,64 +89,52 @@ app.post('/getclientes', async (req: Request, res: Response) => {
 });
 
 
-app.get('/login', autenticacionUsuario, async (req: Request, res: Response) => {
+app.get('/login', async (req: Request, res: Response) => {
   try {
     const token = req.query.token as string;
     const empleadoData = await getTokenUsuarios(token);
-
-    const empleadoRepository = AppDataSource.getRepository(Empleado);
-    let empleadoExistente = await empleadoRepository.findOneBy({ legajo: empleadoData.result.legajo });
-
-    if (!empleadoExistente) {
-      const nuevoEmpleado = empleadoRepository.create({
-        legajo: empleadoData.result.legajo,
-        usuario: empleadoData.result.USUARIO, 
-        COD_UNICOM: empleadoData.result.usuarioOPEN.COD_UNICOM,
-        nombrecompleto: empleadoData.result.nombrecompleto,
-        nombre: empleadoData.result.nombre,
-        apellido: empleadoData.result.apellido,
-        email: empleadoData.result.email,
-        posicion: empleadoData.result.posicion,
-        telefono: empleadoData.result.telefono,
-        celular: empleadoData.result.celular, 
-        direccion: empleadoData.result.direccion,
-        lugar: empleadoData.result.lugar, 
-        tipoDoc: empleadoData.result.tipoDoc, 
-        dni: empleadoData.result.dni, 
-        nacimiento: empleadoData.result.nacimiento, 
-        edad: empleadoData.result.edad, 
-        sexo: empleadoData.result.sexo, 
-        tipousuario: empleadoData.result.tipousuario, 
-        empresa: empleadoData.result.empresa, 
-        interno: empleadoData.result.interno, 
-        bloqueado: empleadoData.result.bloqueado, 
-        baja: empleadoData.result.baja, 
-        pass: empleadoData.result.pass,
-        created_at: empleadoData.result.created_at, 
-        created_by: empleadoData.result.created_by, 
-        autorizado_at: empleadoData.result.autorizado_at, 
-        autorizado_by: empleadoData.result.autorizado_by, 
-      });
-      empleadoExistente = await empleadoRepository.save(nuevoEmpleado);
-    }
-
-    res.json(empleadoExistente);
+    res.json(empleadoData);
   } catch (error) {
     console.error('Error en login:', error);
     res.status(500).json({ message: 'Error en login' });
   }
 });
 
+// app.use('/getusuario', getTokenUsuarios, (req, res) => {
+//   res.send('Bienvenido a la página de inicio');
+
+// });
+
 // Endpoint para obtener cajas según el COD_UNICOM
-app.get('/getboxes', async (req: Request, res: Response) => {
-  try {
-    const boxes = await getBoxes();
-    res.json(boxes);
-  } catch (error) {
-    console.error('Error fetching boxes:', error);
-    res.status(500).json({ message: 'Error fetching boxes' });
-  }
-});
+// app.get('/getboxes', async (req: Request, res: Response) => {
+//   try {
+//     const empleadoRepository = AppDataSource.getRepository(Empleado);
+
+//     // Obtener el último empleado logueado
+//     const ultimoEmpleadoLogueado = await empleadoRepository.findOne({
+//       where: { legajo: empleadoData.result.legajo }
+//     });
+//     // Manejar el caso donde no hay un empleado logueado
+//     if (!ultimoEmpleadoLogueado) {
+//       return 
+//     }
+
+//     console.log(ultimoEmpleadoLogueado)
+
+//     // Usar el COD_UNICOM del empleado para obtener las cajas
+//     const cajas = await getBoxes(ultimoEmpleadoLogueado[0].COD_UNICOM);
+
+//     // Verificar que se obtuvieron las cajas
+//     if (!cajas || cajas.length === 0) {
+//       return 
+//     }
+
+//     res.json(cajas); // Enviar las cajas obtenidas al frontend
+//   } catch (error) {
+//     console.error('Error al obtener cajas:', error);
+//     res.json({ message: 'Error al obtener cajas' }); // Responder con un mensaje de error genérico
+//   }
+// });
 
 // Endpoint para obtener empleados
 app.get('/empleados', async (req: Request, res: Response) => {
@@ -159,6 +147,7 @@ app.get('/empleados', async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Error fetching empleados' });
   }
 });
+
 
 // app.get('/getboxes', async (req: Request, res: Response) => {
 //   const codUnicom = req.params.COD_UNICOM;
@@ -192,7 +181,7 @@ app.get('/tv/status', async (req: Request, res: Response) => {
 //endpoint para tablet /getmotivobysucursal
 
 // Middleware para autenticación y página de inicio
-app.use('/',(req, res) => {
+app.use('/', autenticacionUsuario, (req, res) => {
   res.send('Bienvenido a la página de inicio');
 
 });
