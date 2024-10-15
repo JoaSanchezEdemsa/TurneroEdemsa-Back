@@ -1,10 +1,9 @@
 import axios from 'axios';
 
-// Función para enviar los datos obtenidos al frontend
 export const postClientesbyDNI = async (data: any) => {
   try {
-    // Realiza el POST a la URL del frontend
-    const response = await axios.post('http://turnero:3000', data, {
+
+    const response = await axios.post('http://turnero:3000/paso1', data, {
       headers: {
         'Content-Type': 'application/json'
       }
