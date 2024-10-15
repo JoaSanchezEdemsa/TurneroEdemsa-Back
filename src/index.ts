@@ -28,7 +28,7 @@ app.use(cors({
 app.use(express.json());
 
 // Función para obtener los datos de las sucursales
-app.get('/getsucursales', async (req: Request, res: Response) => {
+app.get('/getsucursalesTV', async (req: Request, res: Response) => {
   try {
     const sucursales = await getSucursales();
     console.log(sucursales);
