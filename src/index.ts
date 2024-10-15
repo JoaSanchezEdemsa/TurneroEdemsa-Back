@@ -4,15 +4,17 @@ import { getBoxes } from './controlador/funciones_get/getBoxes';
 import { getEmpleados } from './controlador/funciones_get/getUsuarios';
 import { getTokenUsuarios } from './controlador/funciones_get/getTokenUsuarios';
 import { Empleado } from './models/Empleado';  
-import autenticacionUsuario from './autenticaciones/loginAutenticar';
 import { postBoxes } from './controlador/funciones_post/postBoxes';
 import { getClientesbyDNI } from './controlador/funciones_get/getClientesbyDNI';
 import { AppDataSource } from './models/db';
 import { postTvStatus } from './controlador/funciones_get/getTvStatus';
-import { postSucursales } from './controlador/funciones_post/postSucursales';
+import { getMotivosBySucursal } from './controlador/funciones_get/getMotivosBySucursal';
+import autenticacionUsuario from './autenticaciones/loginAutenticar';
 import * as dotenv from 'dotenv';
 import cors from 'cors';
 import 'reflect-metadata';
+import axios from 'axios';
+import qs from 'qs'
 
 dotenv.config();
 
@@ -20,16 +22,15 @@ const app = express();
 const port = 8080;
 
 app.use(cors({
-  origin: 'http://localhost:3000', 
+  origin: 'http://turnero:3000', 
   methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'], 
 }));
 
 app.use(express.json());
 
-
-
-
+const username = "turnero";
+const password = "qY#hvVweRlkHp4L8@B";
 
 
 // Función para obtener los datos de las sucursales
@@ -43,15 +44,53 @@ app.get('/getsucursales', async (req: Request, res: Response) => {
   }
 });
 
+app.get('/getmotivos', async (req: Request, res: Response) => {
+  try {
+      const COD_UNICOM = req.query.COD_UNICOM as string;
+      const motivos = await getMotivosBySucursal(COD_UNICOM);
+      res.json(motivos);
+  } catch (error) {
+      res.status(500).json({ message: 'Error fetching data from API' });
+  }
+});
+
+app.post('/submitmotivo', async (req: Request, res: Response) => {
+  try {
+    const authToken = Buffer.from(`${username}:${password}`).toString('base64');
+    const { dni, nombre, motivo, sucursal } = req.body;
+
+    const data = qs.stringify({ dni, nombre, motivo, sucursal }); 
+
+    const response = await axios.post(
+      'http://api.edemsa.local/turnero/sucursales/tablet/turnos/new/save',
+      data,
+      {
+        headers: {
+          'Authorization': `Basic ${authToken}`,
+          'Content-Type': 'application/x-www-form-urlencoded', 
+        },
+      }
+    );
+
+    if (response.status === 200) {
+      res.sendStatus(200); 
+    } else {
+      res.status(500).json({ message: 'Error enviando datos a la API externa' });
+    }
+  } catch (error) {
+    console.error('Error enviando datos:', error);
+    res.status(500).json({ message: 'Error enviando datos a la API externa' });
+  }
+});
+
 app.post('/getclientes', async (req: Request, res: Response) => {
   try {
     const dni = req.body.dni as string; 
     const cliente = await getClientesbyDNI(dni);
-    // Verifica si el cliente existe
     if (cliente.result != false) {
-      res.json({ usuarioExiste: true, cliente: cliente.result }); // Retorna true y los datos del cliente
+      res.json({ usuarioExiste: true, cliente: cliente.result }); 
     } else {
-      res.json({ usuarioExiste: false }); // Retorna true indicando que el usuario no existe
+      res.json({ usuarioExiste: false }); 
     }
   } catch (error) {
     console.error('Error al obtener el cliente:', error);
@@ -81,7 +120,7 @@ app.get('/getusuarios', async (req: Request, res: Response) => {
   }
 });
 
-app.get('/login', async (req: Request, res: Response) => {
+app.get('/login', autenticacionUsuario, async (req: Request, res: Response) => {
   try {
     const token = req.query.token as string;
     
@@ -183,7 +222,7 @@ app.get('/getsucursalesTV', async (req: Request, res: Response) => {
 //endpoint para tablet /getmotivobysucursal
 
 // Middleware para autenticación y página de inicio
-app.use('/', autenticacionUsuario, (req, res) => {
+app.use('/',(req, res) => {
   res.send('Bienvenido a la página de inicio');
 
 });
