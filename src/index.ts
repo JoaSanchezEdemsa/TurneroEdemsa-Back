@@ -28,16 +28,6 @@ app.use(cors({
 app.use(express.json());
 
 // Función para obtener los datos de las sucursales
-app.get('/getsucursalesTV', async (req: Request, res: Response) => {
-  try {
-    const sucursales = await getSucursales();
-    console.log(sucursales);
-    await postSucursales (sucursales);
-    res.json(sucursales);
-  } catch (error) {
-    res.status(500).json({ message: 'Error fetching data from API' });
-  }
-});
 
 app.post('/getclientes', async (req: Request, res: Response) => {
   try {
@@ -80,15 +70,15 @@ app.get('/getusuarios', async (req: Request, res: Response) => {
 app.get('/login', async (req: Request, res: Response) => {
   try {
     const token = req.query.token as string;
-
+    
     // Obtener datos del empleado desde el token
     const empleadoData = await getTokenUsuarios(token); 
     console.log('Empleado obtenido:', empleadoData);
-
+    
     // Revisar si ya existe un empleado con el legajo en la base de datos
     const empleadoRepository = AppDataSource.getRepository(Empleado);
     let empleadoExistente = await empleadoRepository.findOneBy({ legajo: empleadoData.result.legajo }); // Ajuste aquí para acceder al objeto result
-
+    
     // Si no existe, lo guardamos
     if (!empleadoExistente) {
       const nuevoEmpleado = empleadoRepository.create({
@@ -120,15 +110,15 @@ app.get('/login', async (req: Request, res: Response) => {
         autorizado_at: empleadoData.result.autorizado_at, 
         autorizado_by: empleadoData.result.autorizado_by, 
       });
-
+      
       // Guardar en la base de datos
       empleadoExistente = await empleadoRepository.save(nuevoEmpleado);
     }
-
+    
     // Responder con los datos del empleado guardado o existente
     res.json(empleadoExistente); 
     console.log('Empleado guardado/existente:', empleadoExistente);
-
+    
   } catch (error) {
     console.error('Error fetching or saving data:', error); 
     res.status(500).json({ message: 'Error fetching or saving data' });
@@ -150,7 +140,7 @@ app.get('/empleados', async (req: Request, res: Response) => {
 // Función para obtener tv/status
 app.get('/tv/status', async (req: Request, res: Response) => {
   const { COD_UNICOM } = req.query; // Usa query en lugar de body
-
+  
   try {
     if (COD_UNICOM) {
       const tvStatus = await postTvStatus(COD_UNICOM as string); // Asegúrate de convertir a string
@@ -163,6 +153,16 @@ app.get('/tv/status', async (req: Request, res: Response) => {
   }
 });
 
+app.get('/getsucursalesTV', async (req: Request, res: Response) => {
+  try {
+    const sucursales = await getSucursales();
+    console.log(sucursales);
+    await postSucursales (sucursales);
+    res.json(sucursales);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching data from API' });
+  }
+});
 
 
 
