@@ -27,7 +27,21 @@ app.use(cors({
 
 app.use(express.json());
 
+
+
+
+
+
 // Función para obtener los datos de las sucursales
+app.get('/getsucursales', async (req: Request, res: Response) => {
+  try {
+    const sucursales = await getSucursales();
+    console.log(sucursales);
+    res.json(sucursales);
+  } catch (error) { 
+    res.status(500).json({ message: 'Error fetching data from API' });
+  }
+});
 
 app.post('/getclientes', async (req: Request, res: Response) => {
   try {
