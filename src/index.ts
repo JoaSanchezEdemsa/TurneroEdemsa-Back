@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import { getSucursales } from './controlador/funciones_get/getSucursales'; 
 import { getBoxes } from './controlador/funciones_get/getBoxes';
+import { getBoxesbyCod } from './controlador/funciones_get/getBoxesbyCod';
 import { getEmpleados } from './controlador/funciones_get/getUsuarios';
 import { getTokenUsuarios } from './controlador/funciones_get/getTokenUsuarios';
 import { Empleado } from './models/Empleado';  
@@ -9,6 +10,7 @@ import { getClientesbyDNI } from './controlador/funciones_get/getClientesbyDNI';
 import { AppDataSource } from './models/db';
 import { postTvStatus } from './controlador/funciones_get/getTvStatus';
 import { getMotivosBySucursal } from './controlador/funciones_get/getMotivosBySucursal';
+import { getEmpleadosbyCod } from './controlador/funciones_get/getUsuariosbyCod';
 import autenticacionUsuario from './autenticaciones/loginAutenticar';
 import * as dotenv from 'dotenv';
 import cors from 'cors';
@@ -129,61 +131,37 @@ app.get('/getusuarios', async (req: Request, res: Response) => {
   }
 });
 
-app.get('/login', autenticacionUsuario, async (req: Request, res: Response) => {
+app.get('/login', async (req: Request, res: Response) => {
   try {
     const token = req.query.token as string;
-    
-    // Obtener datos del empleado desde el token
-    const empleadoData = await getTokenUsuarios(token); 
-    console.log('Empleado obtenido:', empleadoData);
-    
-    // Revisar si ya existe un empleado con el legajo en la base de datos
-    const empleadoRepository = AppDataSource.getRepository(Empleado);
-    let empleadoExistente = await empleadoRepository.findOneBy({ legajo: empleadoData.result.legajo }); // Ajuste aquí para acceder al objeto result
-    
-    // Si no existe, lo guardamos
-    if (!empleadoExistente) {
-      const nuevoEmpleado = empleadoRepository.create({
-        legajo: empleadoData.result.legajo,
-        usuario: empleadoData.result.USUARIO, 
-        COD_UNICOM: empleadoData.result.COD_UNICOM,
-        nombrecompleto: empleadoData.result.nombrecompleto,
-        nombre: empleadoData.result.nombre,
-        apellido: empleadoData.result.apellido,
-        email: empleadoData.result.email,
-        posicion: empleadoData.result.posicion,
-        telefono: empleadoData.result.telefono,
-        celular: empleadoData.result.celular, 
-        direccion: empleadoData.result.direccion,
-        lugar: empleadoData.result.lugar, 
-        tipoDoc: empleadoData.result.tipoDoc, 
-        dni: empleadoData.result.dni, 
-        nacimiento: empleadoData.result.nacimiento, 
-        edad: empleadoData.result.edad, 
-        sexo: empleadoData.result.sexo, 
-        tipousuario: empleadoData.result.tipousuario, 
-        empresa: empleadoData.result.empresa, 
-        interno: empleadoData.result.interno, 
-        bloqueado: empleadoData.result.bloqueado, 
-        baja: empleadoData.result.baja, 
-        pass: empleadoData.result.pass,
-        created_at: empleadoData.result.created_at, 
-        created_by: empleadoData.result.created_by, 
-        autorizado_at: empleadoData.result.autorizado_at, 
-        autorizado_by: empleadoData.result.autorizado_by, 
-      });
-      
-      // Guardar en la base de datos
-      empleadoExistente = await empleadoRepository.save(nuevoEmpleado);
-    }
-    
-    // Responder con los datos del empleado guardado o existente
-    res.json(empleadoExistente); 
-    console.log('Empleado guardado/existente:', empleadoExistente);
-    
+    const empleadoData = await getTokenUsuarios(token);
+    console.log(empleadoData);
+    res.json(empleadoData);
   } catch (error) {
-    console.error('Error fetching or saving data:', error); 
-    res.status(500).json({ message: 'Error fetching or saving data' });
+    console.error('Error en login:', error);
+    res.status(500).json({ message: 'Error en login' });
+  }
+});
+
+app.get('/getboxesbyCod', async (req: Request, res: Response) => {
+  try {
+    const codUnicom = parseInt(req.query.codUnicom as string, 10);
+    const boxes = await getBoxesbyCod(codUnicom);
+    res.json(boxes);
+  } catch (error) {
+    console.error('Error al obtener las cajas:', error);
+    res.status(500).json({ message: 'Error al obtener las cajas' });
+  }
+});
+
+app.get('/getUsuariosbyCod', async (req: Request, res: Response) => {
+  try {
+    const codUnicom = parseInt(req.query.codUnicom as string, 10);
+    const usuarios = await getEmpleadosbyCod(codUnicom);
+    res.json(usuarios);
+  } catch (error) {
+    console.error('Error al obtener las cajas:', error);
+    res.status(500).json({ message: 'Error al obtener las cajas' });
   }
 });
 

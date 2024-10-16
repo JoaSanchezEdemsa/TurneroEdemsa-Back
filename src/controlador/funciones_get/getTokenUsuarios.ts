@@ -1,29 +1,26 @@
 import axios from 'axios';
 import FormData from 'form-data';
 
-const username = "turnero"; 
-const password = "qY#hvVweRlkHp4L8@B"; 
+const username = 'turnero';
+const password = 'qY#hvVweRlkHp4L8@B';
 
-// Función para obtener los empleados según el token proporcionado
 export const getTokenUsuarios = async (token: string) => {
+  const authToken = Buffer.from(`${username}:${password}`).toString('base64');
+  const formData = new FormData();
+  formData.append('token', token);
+
   try {
-    const authToken = Buffer.from(`${username}:${password}`).toString('base64');
-
-    // Crear un nuevo objeto FormData
-    const formData = new FormData();
-    formData.append('token', token); // Usar la variable token en lugar de un valor fijo
-
-    // Solicitud a la API externa con el body en formato form-data
     const response = await axios.post('http://api.edemsa.local/accounts/getuserbytoken', formData, {
-      headers: {    
+      headers: {
         'Authorization': `Basic ${authToken}`,
-        ...formData.getHeaders() // Incluir los headers de form-data automáticamente
-      }
+        ...formData.getHeaders(),
+      },
     });
 
-    return response.data; // Retorna los datos de la API
+    console.log('Respuesta de la API externa:', response.data); // Verificar lo que devuelve la API
+    return response.data;
   } catch (error) {
-    console.error('Error fetching data:', error);
-    throw new Error('Error fetching data from API'); // Lanza el error para que lo maneje el archivo principal
+    console.error('Error al obtener datos del usuario:', error);
+    throw new Error('Error en la comunicación con la API externa');
   }
 };
