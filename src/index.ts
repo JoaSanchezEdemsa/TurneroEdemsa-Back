@@ -66,9 +66,9 @@ app.get('/getmotivos', async (req: Request, res: Response) => {
 app.post('/submitmotivo', async (req: Request, res: Response) => {
   try {
     const authToken = Buffer.from(`${username}:${password}`).toString('base64');
-    const { dni, nombre, motivo, sucursal } = req.body;
+    const { dni, nombre, motivo, COD_UNICOM } = req.body;
 
-    const data = qs.stringify({ dni, nombre, motivo, sucursal }); 
+    const data = qs.stringify({ dni, nombre, motivo, COD_UNICOM }); 
 
     const response = await axios.post(
       'http://api.edemsa.local/turnero/sucursales/tablet/turnos/new/save',
