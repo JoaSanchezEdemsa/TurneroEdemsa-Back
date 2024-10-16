@@ -21,11 +21,20 @@ dotenv.config();
 const app = express();
 const port = 8080;
 
+const allowedOrigins = ['http://localhost:3000', 'http://turnero:3000'];
+
 app.use(cors({
-  origin: 'http://turnero:3000', 
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Origen no permitido por CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'], 
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
+
 
 app.use(express.json());
 
