@@ -9,12 +9,18 @@ export const getTokenUsuarios = async (token: string) => {
   const formData = new FormData();
   formData.append('token', token);
 
-  const response = await axios.post('http://api.edemsa.local/accounts/getuserbytoken', formData, {
-    headers: {
-      'Authorization': `Basic ${authToken}`,
-      ...formData.getHeaders(),
-    },
-  });
+  try {
+    const response = await axios.post('http://api.edemsa.local/accounts/getuserbytoken', formData, {
+      headers: {
+        'Authorization': `Basic ${authToken}`,
+        ...formData.getHeaders(),
+      },
+    });
 
-  return response.data;
+    console.log('Respuesta de la API externa:', response.data); // Verificar lo que devuelve la API
+    return response.data;
+  } catch (error) {
+    console.error('Error al obtener datos del usuario:', error);
+    throw new Error('Error en la comunicación con la API externa');
+  }
 };

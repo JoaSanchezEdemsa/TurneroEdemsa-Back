@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import { getSucursales } from './controlador/funciones_get/getSucursales'; 
-// import { getBoxes } from './controlador/funciones_get/getBoxes';
-// import { getEmpleados } from './controlador/funciones_get/getUsuarios';
+import { getBoxes } from './controlador/funciones_get/getBoxes';
+import { getEmpleados } from './controlador/funciones_get/getUsuarios';
 import { getTokenUsuarios } from './controlador/funciones_get/getTokenUsuarios';
 import { Empleado } from './models/Empleado';  
 // import { postBoxes } from './controlador/funciones_post/postBoxes';
@@ -93,12 +93,38 @@ app.get('/login', async (req: Request, res: Response) => {
   try {
     const token = req.query.token as string;
     const empleadoData = await getTokenUsuarios(token);
+    console.log(empleadoData);
     res.json(empleadoData);
   } catch (error) {
     console.error('Error en login:', error);
     res.status(500).json({ message: 'Error en login' });
   }
 });
+
+app.get('/getboxes', async (req: Request, res: Response) => {
+  try {
+    const codUnicom = parseInt(req.query.codUnicom as string, 10);
+    const boxes = await getBoxes(codUnicom);
+    res.json(boxes);
+  } catch (error) {
+    console.error('Error al obtener las cajas:', error);
+    res.status(500).json({ message: 'Error al obtener las cajas' });
+  }
+});
+
+app.get('/getUsuarios', async (req: Request, res: Response) => {
+  try {
+    const codUnicom = parseInt(req.query.codUnicom as string, 10);
+    const usuarios = await getEmpleados(codUnicom);
+    res.json(usuarios);
+  } catch (error) {
+    console.error('Error al obtener las cajas:', error);
+    res.status(500).json({ message: 'Error al obtener las cajas' });
+  }
+});
+
+// Otras configuraciones de Express...
+
 
 // app.use('/getusuario', getTokenUsuarios, (req, res) => {
 //   res.send('Bienvenido a la página de inicio');
@@ -149,20 +175,6 @@ app.get('/empleados', async (req: Request, res: Response) => {
 });
 
 
-// app.get('/getboxes', async (req: Request, res: Response) => {
-//   const codUnicom = req.params.COD_UNICOM;
-
-//   try {
-//     // Llamar a la función que obtiene las cajas con el COD_UNICOM
-//     const cajas = await getBoxes(codUnicom);
-
-//     // Devuelve las cajas obtenidas
-//     res.json(cajas);
-//   } catch (error) {
-//     console.error('Error fetching boxes:', error);
-//     res.status(500).json({ message: 'Error fetching boxes' });
-//   }
-// });
 
 
 // Función para obtener tv/status

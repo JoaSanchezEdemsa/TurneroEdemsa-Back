@@ -4,17 +4,16 @@ const username = "turnero";
 const password = "qY#hvVweRlkHp4L8@B"; 
 
 // Función para obtener las cajas
-export const getEmpleados = async () => {
+export const getEmpleados = async (codUnicom: number) => {
   try {
     const authToken = Buffer.from(`${username}:${password}`).toString('base64');
 
-    // Solicitud a la API externa con el body que incluye COD_UNICOM
     const response = await axios.post('http://api.edemsa.local/turnero/sucursales/getusuarios', {
-      COD_UNICOM: '1201' 
+      COD_UNICOM: codUnicom,
     }, {
       headers: {    
         'Authorization': `Basic ${authToken}`,
-        'Content-Type': 'application/json' 
+        'Content-Type': 'application/json' ,
       }
     });
 
