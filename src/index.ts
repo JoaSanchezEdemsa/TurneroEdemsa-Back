@@ -185,7 +185,7 @@ app.get('/tv/status', async (req: Request, res: Response) => {
   
   try {
     if (COD_UNICOM) {
-      const tvStatus = await postTvStatus(COD_UNICOM as string); // Asegúrate de convertir a string
+      const tvStatus = await postTvStatus(COD_UNICOM as string); // convertir a string
       res.json(tvStatus);
     } else {
       res.status(400).json({ message: 'COD_UNICOM no proporcionado' });

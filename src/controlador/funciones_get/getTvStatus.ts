@@ -3,7 +3,6 @@ import axios from 'axios';
 const username = "turnero"; 
 const password = "qY#hvVweRlkHp4L8@B"; 
 
-// Asegúrate de que esta función acepte un argumento
 export const postTvStatus = async (COD_UNICOM: string) => {
   try {
     const authToken = Buffer.from(`${username}:${password}`).toString('base64');
