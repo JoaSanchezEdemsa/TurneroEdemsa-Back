@@ -12,6 +12,7 @@ import { postTvStatus } from './controlador/funciones_get/getTvStatus';
 import { getMotivosBySucursal } from './controlador/funciones_get/getMotivosBySucursal';
 import { getEmpleadosbyCod } from './controlador/funciones_get/getUsuariosbyCod';
 import { getTurnos } from './controlador/funciones_get/getTurnosbyCod';
+import { getPermisosbyNick } from './controlador/funciones_get/getPermisosbyNick';
 //import autenticacionUsuario from './autenticaciones/loginAutenticar';
 import * as dotenv from 'dotenv';
 import cors from 'cors';
@@ -203,6 +204,20 @@ app.get('/getturnosbycod', async (req: Request, res: Response) => {
       res.status(500).json({ message: 'Error fetching data from API' });
   }
 });
+
+app.get('/getpermisosbynick', async (req: Request, res: Response) => {
+  try {
+      const NICK = req.query.NICK as string;
+      const permisos = await getPermisosbyNick(NICK);
+      console.log('________________')
+      console.log(permisos)
+      res.json(permisos);
+  } catch (error) {
+      res.status(500).json({ message: 'Error fetching data from API' });
+  }
+});
+
+
 
 
 //endpoint para tablet /getmotivobysucursal
