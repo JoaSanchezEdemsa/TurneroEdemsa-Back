@@ -11,7 +11,8 @@ import { AppDataSource } from './models/db';
 import { postTvStatus } from './controlador/funciones_get/getTvStatus';
 import { getMotivosBySucursal } from './controlador/funciones_get/getMotivosBySucursal';
 import { getEmpleadosbyCod } from './controlador/funciones_get/getUsuariosbyCod';
-import autenticacionUsuario from './autenticaciones/loginAutenticar';
+import { getTurnos } from './controlador/funciones_get/getTurnosbyCod';
+//import autenticacionUsuario from './autenticaciones/loginAutenticar';
 import * as dotenv from 'dotenv';
 import cors from 'cors';
 import 'reflect-metadata';
@@ -193,13 +194,21 @@ app.get('/tv/status', async (req: Request, res: Response) => {
   }
 });
 
-
+app.get('/getturnosbycod', async (req: Request, res: Response) => {
+  try {
+      const COD_UNICOM = req.query.COD_UNICOM as string;
+      const turnos = await getTurnos(COD_UNICOM);
+      res.json(turnos);
+  } catch (error) {
+      res.status(500).json({ message: 'Error fetching data from API' });
+  }
+});
 
 
 //endpoint para tablet /getmotivobysucursal
 
 // Middleware para autenticación y página de inicio
-app.use('/', autenticacionUsuario, (req, res) => {
+app.use('/', (req, res) => {
   res.send('Bienvenido a la página de inicio');
 });
 
