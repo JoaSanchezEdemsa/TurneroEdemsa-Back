@@ -16,7 +16,7 @@ export const getEmpleadosbyCod = async (codUnicom: number) => {
         'Content-Type': 'application/json' ,
       }
     });
-
+    console.log(response.data)
     return response.data; // Retorna los datos de la API
   } catch (error) {
     console.error('Error fetching data:', error);

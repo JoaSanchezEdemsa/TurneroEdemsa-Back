@@ -209,8 +209,9 @@ app.get('/getpermisosbynick', async (req: Request, res: Response) => {
   try {
       const NICK = req.query.NICK as string;
       const permisos = await getPermisosbyNick(NICK);
-      console.log('________________')
+      console.log("_____________________________________________________________________________________________")
       console.log(permisos)
+      console.log("_____________________________________________________________________________________________")
       res.json(permisos);
   } catch (error) {
       res.status(500).json({ message: 'Error fetching data from API' });
