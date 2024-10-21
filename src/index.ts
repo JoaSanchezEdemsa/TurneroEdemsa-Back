@@ -14,6 +14,7 @@ import { getEmpleadosbyCod } from './controlador/funciones_get/getUsuariosbyCod'
 import { getTurnos } from './controlador/funciones_get/getTurnosbyCod';
 import { getPermisosbyNick } from './controlador/funciones_get/getPermisosbyNick';
 import { getStatusTurno } from './controlador/funciones_get/getStatusTurno';
+import { getMotivosOpenSGC } from './controlador/funciones_get/getMotivosOpenSGC';
 //import autenticacionUsuario from './autenticaciones/loginAutenticar';
 import * as dotenv from 'dotenv';
 import cors from 'cors';
@@ -52,6 +53,16 @@ app.post('/getstatusturno', async (req: Request, res: Response) => {
     console.log("Datos recibidos:", req.body);  
     const status = await getStatusTurno(id, NICK);
     res.json(status);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching data from API' });
+  }
+});
+
+app.post('/getmotivosopen', async (req: Request, res: Response) => {
+  try {
+    const motivosopen = await getMotivosOpenSGC();
+    console.log(motivosopen)
+    res.json(motivosopen);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching data from API' });
   }
@@ -230,9 +241,6 @@ app.get('/getpermisosbynick', async (req: Request, res: Response) => {
 });
 
 
-
-
-//endpoint para tablet /getmotivobysucursal
 
 // Middleware para autenticación y página de inicio
 app.use('/', (req, res) => {
