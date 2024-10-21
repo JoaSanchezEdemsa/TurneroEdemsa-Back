@@ -13,6 +13,7 @@ import { getMotivosBySucursal } from './controlador/funciones_get/getMotivosBySu
 import { getEmpleadosbyCod } from './controlador/funciones_get/getUsuariosbyCod';
 import { getTurnos } from './controlador/funciones_get/getTurnosbyCod';
 import { getPermisosbyNick } from './controlador/funciones_get/getPermisosbyNick';
+import { getStatusTurno } from './controlador/funciones_get/getStatusTurno';
 //import autenticacionUsuario from './autenticaciones/loginAutenticar';
 import * as dotenv from 'dotenv';
 import cors from 'cors';
@@ -45,6 +46,16 @@ app.use(express.json());
 const username = "turnero";
 const password = "qY#hvVweRlkHp4L8@B";
 
+app.post('/getstatusturno', async (req: Request, res: Response) => {
+  try {
+    const { id, NICK } = req.body;
+    console.log("Datos recibidos:", req.body);  
+    const status = await getStatusTurno(id, NICK);
+    res.json(status);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching data from API' });
+  }
+});
 
 // Función para obtener los datos de las sucursales
 app.get('/getsucursales', async (req: Request, res: Response) => {
