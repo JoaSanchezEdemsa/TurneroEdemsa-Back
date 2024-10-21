@@ -5,7 +5,7 @@ import { getBoxesbyCod } from './controlador/funciones_get/getBoxesbyCod';
 import { getEmpleados } from './controlador/funciones_get/getUsuarios';
 import { getTokenUsuarios } from './controlador/funciones_get/getTokenUsuarios';
 import { Empleado } from './models/Empleado';  
-import { postBoxes } from './controlador/funciones_post/postBoxes';
+import { postBoxes, addBox, deleteBox } from './controlador/funciones_post/postBoxes';
 import { getClientesbyDNI } from './controlador/funciones_get/getClientesbyDNI';
 import { AppDataSource } from './models/db';
 import { postTvStatus } from './controlador/funciones_get/getTvStatus';
@@ -142,6 +142,29 @@ app.get('/getboxes', async (req: Request, res: Response) => {
     res.json(boxes); 
   } catch (error) {
     res.status(500).json({ message: 'Error fetching data from API' });
+  }
+});
+
+// Endpoint para agregar una caja
+app.post('/addbox', async (req: Request, res: Response) => {
+  try {
+    const { COD_UNICOM, nombre_box, created_by } = req.body;
+    const newBox = { COD_UNICOM, nombre_box, created_by };
+    const result = await addBox(newBox);
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al agregar la caja' });
+  }
+});
+
+// Endpoint para eliminar una caja
+app.delete('/deletebox/:id', async (req: Request, res: Response) => {
+  try {
+    const boxId = parseInt(req.params.id, 10);
+    const result = await deleteBox(boxId);
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al eliminar la caja' });
   }
 });
 
