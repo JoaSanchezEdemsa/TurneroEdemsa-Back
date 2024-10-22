@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import { getSucursales } from './controlador/funciones_get/getSucursales'; 
+import { getSucursalbyCod} from './controlador/funciones_get/getSucursalbyCod'
 import { getBoxes } from './controlador/funciones_get/getBoxes';
 import { getBoxesbyCod } from './controlador/funciones_get/getBoxesbyCod';
 import { getEmpleados } from './controlador/funciones_get/getUsuarios';
@@ -22,6 +23,7 @@ import cors from 'cors';
 import 'reflect-metadata';
 import axios from 'axios';
 import qs from 'qs'
+
 
 dotenv.config();
 
@@ -90,6 +92,19 @@ app.get('/getsucursales', async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Error fetching data from API' });
   }
 });
+app.get('/getsucursalbycod', async (req: Request, res: Response) => {
+  try {
+    const codUnicom = parseInt(req.query.codUnicom as string, 10);
+    const sucursales = await getSucursalbyCod(codUnicom);
+    console.log("____________________________________________________________")
+    console.log(sucursales);
+    console.log("____________________________________________________________")
+    res.json(sucursales);
+  } catch (error) { 
+    res.status(500).json({ message: 'Error fetching data from API' });
+  }
+});
+
 
 app.get('/getmotivos', async (req: Request, res: Response) => {
   try {
@@ -273,9 +288,6 @@ app.get('/getpermisosbynick', async (req: Request, res: Response) => {
   try {
       const NICK = req.query.NICK as string;
       const permisos = await getPermisosbyNick(NICK);
-      console.log("_____________________________________________________________________________________________")
-      console.log(permisos)
-      console.log("_____________________________________________________________________________________________")
       res.json(permisos);
   } catch (error) {
       res.status(500).json({ message: 'Error fetching data from API' });
