@@ -15,6 +15,7 @@ import { getTurnos } from './controlador/funciones_get/getTurnosbyCod';
 import { getPermisosbyNick } from './controlador/funciones_get/getPermisosbyNick';
 import { getStatusTurno } from './controlador/funciones_get/getStatusTurno';
 import { getMotivosOpenSGC } from './controlador/funciones_get/getMotivosOpenSGC';
+import { getStatusTurnoFinalizado } from './controlador/funciones_get/getStatusTurnoFinalizado';
 //import autenticacionUsuario from './autenticaciones/loginAutenticar';
 import * as dotenv from 'dotenv';
 import cors from 'cors';
@@ -52,6 +53,17 @@ app.post('/getstatusturno', async (req: Request, res: Response) => {
     const { id, NICK } = req.body;
     console.log("Datos recibidos:", req.body);  
     const status = await getStatusTurno(id, NICK);
+    res.json(status);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching data from API' });
+  }
+});
+
+app.post('/getstatusturnofinalizado', async (req: Request, res: Response) => {
+  try {
+    const { id, NICK, NIC, CODIGO } = req.body;
+    console.log("Datos recibidos:", req.body);  
+    const status = await getStatusTurnoFinalizado(id, NICK, NIC, CODIGO);
     res.json(status);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching data from API' });
