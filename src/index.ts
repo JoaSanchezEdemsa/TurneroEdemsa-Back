@@ -6,7 +6,7 @@ import { getBoxesbyCod } from './controlador/funciones_get/getBoxesbyCod';
 import { getEmpleados } from './controlador/funciones_get/getUsuarios';
 import { getTokenUsuarios } from './controlador/funciones_get/getTokenUsuarios';
 import { Empleado } from './models/Empleado';  
-import { postBoxes, deleteBox } from './controlador/funciones_post/postBoxes';
+import { postBoxes, deleteBox, addBox } from './controlador/funciones_post/postBoxes';
 import { getClientesbyDNI } from './controlador/funciones_get/getClientesbyDNI';
 import { AppDataSource } from './models/db';
 import { postTvStatus } from './controlador/funciones_get/getTvStatus';
@@ -172,35 +172,33 @@ app.get('/getboxes', async (req: Request, res: Response) => {
   }
 });
 
-// Endpoint para agregar una caja
+app.post('/addBox', async (req: Request, res: Response) => {
+  try {
+    const { COD_UNICOM, nombre_box, created_by } = req.body;
+    console.log("Datos recibidos:", req.body);  
+    const status = await addBox({ COD_UNICOM, nombre_box, created_by });
+    res.json(status);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching data from API' });
+  }
+});
 
-// app.post('/addBox', async (req: Request, res: Response) => {
-//   try {
-//       const { nombre_box, COD_UNICOM, created_by } = req.body;
-
-//       // Validación de dato
-
-//       // Aquí deberías incluir la lógica para agregar la caja en la base de datos
-//       const createdBox = await addBox(nombre_box,COD_UNICOM, created_by); // Usa la función importada
-
-//       res.status(201).json({ success: true, newBox: createdBox });
-//   } catch (error) {
-//       console.error('Error al agregar la caja:', error);
-//       res.status(500).json({ success: false, message: 'Error interno del servidor' });
-//   }
-// });
   
 
 // Endpoint para eliminar una caja
-app.delete('/deletebox/:id', async (req: Request, res: Response) => {
+app.delete('/delete', async (req: Request, res: Response) => {
   try {
-    const boxId = parseInt(req.params.id, 10);
-    const result = await deleteBox(boxId);
+    const { idBox, NICK } = req.body;  // Obtener idBox y NICK desde el cuerpo de la solicitud
+    
+    // Llamar a la función deleteBox pasando el objeto con idBox y NICK
+    const result = await deleteBox({ idBox, NICK });
+    
     res.json(result);
   } catch (error) {
     res.status(500).json({ message: 'Error al eliminar la caja' });
   }
 });
+
 
 // Función para obtener los usuarios
 app.get('/getusuarios', async (req: Request, res: Response) => {

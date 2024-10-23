@@ -1,4 +1,6 @@
 import axios from 'axios';
+import FormData from 'form-data';
+
 
 const username = "turnero"; 
 const password = "qY#hvVweRlkHp4L8@B"; 
@@ -22,8 +24,35 @@ export const postBoxes = async (data: any) => {
 export const addBox = async (newBox: { COD_UNICOM: number; nombre_box: string; created_by: number; }) => {
   try {
     const authToken = Buffer.from(`${username}:${password}`).toString('base64');
+    const formData = new FormData();
+    formData.append('nombre_box', newBox.nombre_box);
+    formData.append('COD_UNICOM', newBox.COD_UNICOM);
+    formData.append('created_by', newBox.created_by);
 
-    const response = await axios.post('http://api.edemsa.local/turnero/sucursales/addbox', newBox, {
+
+    const response = await axios.post('http://api.edemsa.local/turnero/sucursales/boxes/new', formData, {
+      headers: {
+        'Authorization': `Basic ${authToken}`,
+        'Content-Type': 'multipart/form-data', // Asegúrate de usar multipart/form-data
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error al agregar la caja:', error);
+    throw new Error('Error al agregar la caja');
+  }
+};
+
+// // Función que elimina una caja por su ID
+export const deleteBox = async (borrar: { idBox: number; NICK: string; }) => {
+  try {
+    const authToken = Buffer.from(`${username}:${password}`).toString('base64');
+    const formData = new FormData();
+    formData.append('idBox', borrar.idBox);
+    formData.append('NICK', borrar.NICK);
+
+
+    const response = await axios.post('http://api.edemsa.local/turnero/sucursales/boxes/delete', formData, {
       headers: {
         'Authorization': `Basic ${authToken}`,
         'Content-Type': 'application/json',
@@ -34,24 +63,5 @@ export const addBox = async (newBox: { COD_UNICOM: number; nombre_box: string; c
   } catch (error) {
     console.error('Error al agregar la caja:', error);
     throw new Error('Error al agregar la caja');
-  }
-};
-
-// Función que elimina una caja por su ID
-export const deleteBox = async (boxId: number) => {
-  try {
-    const authToken = Buffer.from(`${username}:${password}`).toString('base64');
-
-    const response = await axios.delete(`http://api.edemsa.local/turnero/sucursales/deletebox/${boxId}`, {
-      headers: {
-        'Authorization': `Basic ${authToken}`,
-        'Content-Type': 'application/json',
-      },
-    });
-
-    return response.data;
-  } catch (error) {
-    console.error('Error al eliminar la caja:', error);
-    throw new Error('Error al eliminar la caja');
   }
 };
