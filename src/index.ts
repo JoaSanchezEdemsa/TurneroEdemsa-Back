@@ -185,9 +185,9 @@ app.post('/addBox', async (req: Request, res: Response) => {
 
 app.post('/addMotivo', async (req: Request, res: Response) => {
   try {
-    const { motivo, COD_UNICOM, created_by } = req.body;
+    const { motivo, COD_UNICOM, created_by, estimatedTime } = req.body;
     console.log("Datos recibidos:", req.body);  
-    const status = await addMotivo({ motivo, COD_UNICOM, created_by });
+    const status = await addMotivo({ motivo, COD_UNICOM, created_by, estimatedTime });
     res.json(status);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching data from API' });
