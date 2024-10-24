@@ -24,6 +24,7 @@ import cors from 'cors';
 import 'reflect-metadata';
 import axios from 'axios';
 import qs from 'qs'
+import { addOperador, estado } from './controlador/funciones_post/postOperadores';
 
 
 dotenv.config();
@@ -183,6 +184,28 @@ app.post('/addBox', async (req: Request, res: Response) => {
   }
 });
 
+app.post('/addOperador', async (req: Request, res: Response) => {
+  try {
+    const {id, COD_UNICOM ,empleado } = req.body;
+    console.log("Datos recibidos:", req.body);  
+    const status = await addOperador({id, COD_UNICOM, empleado });
+    res.json(status);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching data from API' });
+  }
+});
+
+app.post('/addEstado', async (req: Request, res: Response) => {
+  try {
+    const {id, enable } = req.body;
+    console.log("Datos recibidos:", req.body);  
+    const status = await estado({id, enable });
+    res.json(status);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching data from API' });
+  }
+});
+
 app.post('/addMotivo', async (req: Request, res: Response) => {
   try {
     const { motivo, COD_UNICOM, created_by, estimatedTime } = req.body;
@@ -194,12 +217,12 @@ app.post('/addMotivo', async (req: Request, res: Response) => {
   }
 });
 
-app.delete('/delete', async (req: Request, res: Response) => {
+app.delete('/deleteBox', async (req: Request, res: Response) => {
   try {
-    const { idBox, NICK } = req.body;  // Obtener idBox y NICK desde el cuerpo de la solicitud
+    const { id } = req.body;  // Obtener idBox y NICK desde el cuerpo de la solicitud
     
     // Llamar a la función deleteBox pasando el objeto con idBox y NICK
-    const result = await deleteBox({ idBox, NICK });
+    const result = await deleteBox({ id });
     
     res.json(result);
   } catch (error) {

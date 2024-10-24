@@ -44,12 +44,12 @@ export const addBox = async (newBox: { COD_UNICOM: number; nombre_box: string; c
 };
 
 // // Función que elimina una caja por su ID
-export const deleteBox = async (borrar: { idBox: number; NICK: string; }) => {
+export const deleteBox = async (borrar: { id: number }) => {
   try {
     const authToken = Buffer.from(`${username}:${password}`).toString('base64');
     const formData = new FormData();
-    formData.append('idBox', borrar.idBox);
-    formData.append('NICK', borrar.NICK);
+    formData.append('idBox', borrar.id);
+    // formData.append('NICK', borrar.NICK);
 
 
     const response = await axios.post('http://api.edemsa.local/turnero/sucursales/boxes/delete', formData, {
