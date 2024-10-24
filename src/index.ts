@@ -17,6 +17,7 @@ import { getPermisosbyNick } from './controlador/funciones_get/getPermisosbyNick
 import { getStatusTurno } from './controlador/funciones_get/getStatusTurno';
 import { getMotivosOpenSGC } from './controlador/funciones_get/getMotivosOpenSGC';
 import { getStatusTurnoFinalizado } from './controlador/funciones_get/getStatusTurnoFinalizado';
+import { addMotivo } from './controlador/funciones_post/postMotivo';
 //import autenticacionUsuario from './autenticaciones/loginAutenticar';
 import * as dotenv from 'dotenv';
 import cors from 'cors';
@@ -86,7 +87,6 @@ app.post('/getmotivosopen', async (req: Request, res: Response) => {
 app.get('/getsucursales', async (req: Request, res: Response) => {
   try {
     const sucursales = await getSucursales();
-    console.log(sucursales);
     res.json(sucursales);
   } catch (error) { 
     res.status(500).json({ message: 'Error fetching data from API' });
@@ -183,9 +183,17 @@ app.post('/addBox', async (req: Request, res: Response) => {
   }
 });
 
-  
+app.post('/addMotivo', async (req: Request, res: Response) => {
+  try {
+    const { motivo, COD_UNICOM, created_by } = req.body;
+    console.log("Datos recibidos:", req.body);  
+    const status = await addMotivo({ motivo, COD_UNICOM, created_by });
+    res.json(status);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching data from API' });
+  }
+});
 
-// Endpoint para eliminar una caja
 app.delete('/delete', async (req: Request, res: Response) => {
   try {
     const { idBox, NICK } = req.body;  // Obtener idBox y NICK desde el cuerpo de la solicitud

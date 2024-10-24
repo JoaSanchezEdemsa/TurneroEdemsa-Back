@@ -23,7 +23,6 @@ export const getStatusTurno = async (id: string , NICK: string) => {
               ...formData.getHeaders()
           }
       });
-      console.log(response.data)
       return response.data;
   } catch (error) {
       console.error('Error fetching data:', error);
